@@ -7,7 +7,7 @@ import { api, setAuthToken, getAuthToken } from './services/api';
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import GlobalSearchModal from './components/GlobalSearchModal';
-import LoginPortal from './components/LoginPortal';
+import AuthPage from './screens/auth/AuthPage';
 import AccessDenied from './components/AccessDenied';
 import Toast from './components/Toast';
 
@@ -100,34 +100,59 @@ const DEFAULT_SCREENS = {
 };
 
 export default function App() {
-  const [currentRole, setCurrentRole] = useState(ROLES.STUDENT);
-  const [currentUser, setCurrentUser] = useState(CURRENT_USERS[ROLES.STUDENT]);
+  const [currentUser, setCurrentUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('edumax_user');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return CURRENT_USERS[ROLES.STUDENT];
+  });
+
+  const [currentRole, setCurrentRole] = useState(() => {
+    try {
+      const saved = localStorage.getItem('edumax_user');
+      if (saved) {
+        const u = JSON.parse(saved);
+        if (u.role) return u.role;
+      }
+    } catch (e) {}
+    return ROLES.STUDENT;
+  });
+
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return !!getAuthToken();
+  });
+
   const [activeScreen, setActiveScreen] = useState('dashboard');
   const [searchOpen, setSearchOpen] = useState(false);
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [toast, setToast] = useState({ message: '', type: 'success' });
   const [notificationCount, setNotificationCount] = useState(3);
 
-  // Authenticate session on initial startup if not logged in
+  // Verify existing token session on startup
   useEffect(() => {
-    async function initSession() {
+    async function verifySession() {
       const existingToken = getAuthToken();
-      if (!existingToken) {
-        const res = await api.login({ role: currentRole });
-        if (res && res.success) {
-          setAuthToken(res.data.token);
-          if (res.data.user) {
-            setCurrentUser(res.data.user);
-          }
+      if (existingToken) {
+        const res = await api.getMe();
+        if (res && res.success && res.data) {
+          setCurrentUser(res.data);
+          setCurrentRole(res.data.role);
+          setIsAuthenticated(true);
+        } else if (res && !res.success) {
+          api.logout();
+          setIsAuthenticated(false);
         }
+      } else {
+        setIsAuthenticated(false);
       }
     }
-    initSession();
+    verifySession();
   }, []);
 
-  // Sync notifications from backend
+  // Sync notifications from backend when logged in
   useEffect(() => {
+    if (!isAuthenticated) return;
     async function loadNotifs() {
       const res = await api.getNotifications();
       if (res && res.success && Array.isArray(res.data)) {
@@ -136,7 +161,7 @@ export default function App() {
       }
     }
     loadNotifs();
-  }, [activeScreen]);
+  }, [activeScreen, isAuthenticated]);
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
@@ -155,14 +180,30 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Handle Login / Persona Switch
+  // Handle Login (Email or Social Auth - Google / LinkedIn)
   const handleLoginSuccess = (user, token) => {
     setCurrentRole(user.role);
     setCurrentUser(user);
     setAuthToken(token);
+    try {
+      localStorage.setItem('edumax_user', JSON.stringify(user));
+    } catch (e) {}
+    setIsAuthenticated(true);
     setActiveScreen(DEFAULT_SCREENS[user.role] || 'dashboard');
     setMobileMenuOpen(false);
     showToast(`Access granted! Signed in as ${user.name} (${user.role.toUpperCase()}).`);
+  };
+
+  // Sign out - completely terminates session and directs to AuthPage
+  const handleSignOut = () => {
+    api.logout();
+    setAuthToken('');
+    try {
+      localStorage.removeItem('edumax_user');
+    } catch (e) {}
+    setIsAuthenticated(false);
+    setActiveScreen('dashboard');
+    showToast('Signed out of Edumax Cloud successfully.', 'info');
   };
 
   const handleSelectScreenFromSearch = (role, screen) => {
@@ -187,7 +228,7 @@ export default function App() {
           currentRole={currentRole}
           attemptedScreen={activeScreen}
           onReturnHome={() => setActiveScreen(DEFAULT_SCREENS[currentRole])}
-          onSwitchAccount={() => setLoginModalOpen(true)}
+          onSignOut={handleSignOut}
         />
       );
     }
@@ -376,6 +417,21 @@ export default function App() {
     return <StudentDashboard onNavigate={(screen) => setActiveScreen(screen)} />;
   };
 
+  // If not authenticated, render the dedicated AuthPage with Google & LinkedIn social login
+  if (!isAuthenticated) {
+    return (
+      <div className="app-container" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <div className="ambient-glow" />
+        <AuthPage onLoginSuccess={handleLoginSuccess} />
+        <Toast 
+          message={toast.message} 
+          type={toast.type} 
+          onClose={() => setToast({ message: '', type: 'success' })} 
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="app-container">
       {/* Background Ambient Mesh Glow */}
@@ -399,7 +455,7 @@ export default function App() {
           currentRole={currentRole}
           activeScreen={activeScreen}
           onOpenSearch={() => setSearchOpen(true)}
-          onOpenLoginModal={() => setLoginModalOpen(true)}
+          onSignOut={handleSignOut}
           onToggleMobileMenu={() => setMobileMenuOpen(!mobileMenuOpen)}
           notificationCount={notificationCount}
         />
@@ -414,14 +470,6 @@ export default function App() {
         isOpen={searchOpen} 
         onClose={() => setSearchOpen(false)} 
         onSelectScreen={handleSelectScreenFromSearch}
-        currentRole={currentRole}
-      />
-
-      {/* Enterprise RBAC Login & Account Switcher Portal */}
-      <LoginPortal 
-        isOpen={loginModalOpen}
-        onClose={() => setLoginModalOpen(false)}
-        onLoginSuccess={handleLoginSuccess}
         currentRole={currentRole}
       />
 

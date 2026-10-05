@@ -54,6 +54,17 @@ export const api = {
     return res;
   },
   
+  socialLogin: async ({ provider, role, profile }) => {
+    const res = await request('/auth/social-login', {
+      method: 'POST',
+      body: JSON.stringify({ provider, role, profile })
+    });
+    if (res && res.success && res.data?.token) {
+      setAuthToken(res.data.token);
+    }
+    return res;
+  },
+
   getMe: () => request('/auth/me'),
 
   logout: () => {

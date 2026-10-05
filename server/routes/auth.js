@@ -42,7 +42,7 @@ const USERS_CATALOG = {
   }
 };
 
-// Login Route
+// Login Route (Email & Password / Role Lookup)
 router.post('/login', (req, res) => {
   const { email, role } = req.body;
 
@@ -50,7 +50,6 @@ router.post('/login', (req, res) => {
   if (email && USERS_CATALOG[email.toLowerCase()]) {
     user = USERS_CATALOG[email.toLowerCase()];
   } else if (role) {
-    // Lookup by role
     const found = Object.values(USERS_CATALOG).find(u => u.role.toLowerCase() === role.toLowerCase());
     if (found) user = found;
   }
@@ -71,6 +70,60 @@ router.post('/login', (req, res) => {
     data: {
       token,
       user
+    }
+  });
+});
+
+// Social Login Route (Google & LinkedIn)
+router.post('/social-login', (req, res) => {
+  const { provider, role = 'student', profile = {} } = req.body;
+
+  if (!provider || !['google', 'linkedin'].includes(provider.toLowerCase())) {
+    return res.status(400).json({ success: false, error: 'Valid social provider required (google or linkedin).' });
+  }
+
+  // Relevant users for social sign-in:
+  // - Google: Candidates & Students (Nafis Ahmed) or Teachers
+  // - LinkedIn: Verified Educators, IELTS Examiners & Professional Staff (Dr. Sarah Jenkins)
+  let email = profile.email;
+  if (!email) {
+    if (provider.toLowerCase() === 'linkedin') {
+      email = 's.jenkins@edumax.io';
+    } else {
+      email = role === 'teacher' ? 's.jenkins@edumax.io' : 'nafis.ahmed@edumax.io';
+    }
+  }
+
+  let user = USERS_CATALOG[email.toLowerCase()];
+
+  if (!user) {
+    user = {
+      id: `usr_${Date.now()}`,
+      name: profile.name || (provider.toLowerCase() === 'linkedin' ? 'Dr. Sarah Jenkins' : 'Nafis Ahmed'),
+      email: email,
+      role: role.toLowerCase(),
+      authProvider: provider.toLowerCase(),
+      branch: 'Gulshan HQ',
+      targetBand: role === 'student' ? 8.0 : undefined,
+      currentBand: role === 'student' ? 7.5 : undefined
+    };
+  } else {
+    user = { ...user, authProvider: provider.toLowerCase() };
+  }
+
+  const token = signToken({
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role
+  });
+
+  res.json({
+    success: true,
+    data: {
+      token,
+      user,
+      provider: provider.toLowerCase()
     }
   });
 });

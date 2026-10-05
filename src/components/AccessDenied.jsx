@@ -1,7 +1,7 @@
 import React from 'react';
-import { ShieldAlert, ArrowLeft, LogIn, Lock, CheckCircle2 } from 'lucide-react';
+import { ShieldAlert, ArrowLeft, LogOut, Lock, CheckCircle2 } from 'lucide-react';
 
-export default function AccessDenied({ currentRole, attemptedScreen, onReturnHome, onSwitchAccount }) {
+export default function AccessDenied({ currentRole, attemptedScreen, onReturnHome, onSignOut }) {
   const roleDisplayNames = {
     student: 'Student Portal Candidate',
     teacher: 'Teacher / IELTS Examiner',
@@ -88,11 +88,11 @@ export default function AccessDenied({ currentRole, attemptedScreen, onReturnHom
 
           <button 
             className="btn btn-secondary"
-            onClick={onSwitchAccount}
+            onClick={onSignOut}
             style={{ display: 'inline-flex', alignItems: 'center', gap: '7px' }}
           >
-            <LogIn size={14} />
-            <span>Switch Portal Account</span>
+            <LogOut size={14} />
+            <span>Sign Out</span>
           </button>
         </div>
       </div>

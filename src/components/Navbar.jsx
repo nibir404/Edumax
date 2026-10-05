@@ -5,7 +5,7 @@ import {
   ChevronDown, 
   Menu, 
   LogOut, 
-  ArrowRightLeft,
+  User,
   GraduationCap,
   Award,
   Building,
@@ -18,7 +18,7 @@ export default function Navbar({
   activeScreen, 
   onOpenSearch,
   onToggleMobileMenu,
-  onOpenLoginModal,
+  onSignOut,
   notificationCount = 3 
 }) {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -105,7 +105,7 @@ export default function Navbar({
         </div>
       </div>
 
-      {/* Right: Telemetry, Switch Portal, Notifications, User */}
+      {/* Right: Telemetry, Notifications, User Profile */}
       <div className="nav-right-section">
 
         {/* Minimal Telemetry Status */}
@@ -132,21 +132,6 @@ export default function Navbar({
           }} />
           <span>SaaS Mutex Active</span>
         </div>
-
-        {/* Switch Portal Account Button */}
-        <button
-          onClick={onOpenLoginModal}
-          className="btn btn-secondary btn-sm"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px'
-          }}
-          title="Switch to another segregated role portal"
-        >
-          <ArrowRightLeft size={13} color="var(--primary-red)" />
-          <span className="desktop-sm-visible">Switch Portal</span>
-        </button>
 
         {/* Notifications Icon Button */}
         <div style={{ position: 'relative' }}>
@@ -240,37 +225,11 @@ export default function Navbar({
                 </div>
               </div>
 
+              {/* Sign Out Action */}
               <button
                 onClick={() => {
                   setShowProfileMenu(false);
-                  onOpenLoginModal();
-                }}
-                style={{
-                  width: '100%',
-                  background: 'none',
-                  border: 'none',
-                  textAlign: 'left',
-                  padding: '7px 8px',
-                  borderRadius: 'var(--radius-sm)',
-                  fontSize: '12px',
-                  fontWeight: '600',
-                  color: 'var(--text-primary)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '7px',
-                  cursor: 'pointer'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-subtle)'}
-                onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
-              >
-                <ArrowRightLeft size={13} color="var(--primary-red)" />
-                Switch Role Account
-              </button>
-
-              <button
-                onClick={() => {
-                  setShowProfileMenu(false);
-                  onOpenLoginModal();
+                  if (onSignOut) onSignOut();
                 }}
                 style={{
                   width: '100%',
