@@ -6,7 +6,9 @@ import {
   Edit3, 
   Save, 
   DollarSign,
-  Users
+  Users,
+  X,
+  CheckCircle2
 } from 'lucide-react';
 
 export default function PlanEditor() {
@@ -40,6 +42,24 @@ export default function PlanEditor() {
     }
   ]);
 
+  const [editingPlan, setEditingPlan] = useState(null);
+  const [savedBanner, setSavedBanner] = useState('');
+
+  const handleSavePlan = (e) => {
+    e.preventDefault();
+    if (!editingPlan) return;
+    const exists = plans.some(p => p.id === editingPlan.id);
+    if (exists) {
+      setPlans(plans.map(p => p.id === editingPlan.id ? editingPlan : p));
+      setSavedBanner(`Updated entitlements for ${editingPlan.name}!`);
+    } else {
+      setPlans([...plans, editingPlan]);
+      setSavedBanner(`Created new tier: ${editingPlan.name}!`);
+    }
+    setEditingPlan(null);
+    setTimeout(() => setSavedBanner(''), 3000);
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       
@@ -54,11 +74,29 @@ export default function PlanEditor() {
           </p>
         </div>
 
-        <button className="btn btn-primary" onClick={() => alert("Create new tier modal opened.")}>
+        <button 
+          className="btn btn-primary" 
+          onClick={() => setEditingPlan({
+            id: `plan_custom_${Date.now().toString().slice(-4)}`,
+            name: 'New Custom Tier',
+            price: '$950',
+            period: '/mo',
+            seats: 600,
+            branches: 2,
+            features: ['4-Skill Diagnostic Sim', 'Standard Question Bank', 'Email Support']
+          })}
+        >
           <Plus size={15} />
           <span>Create New Tier</span>
         </button>
       </div>
+
+      {savedBanner && (
+        <div style={{ padding: '12px 16px', background: 'var(--accent-green-light)', color: '#065F46', borderRadius: '8px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <CheckCircle2 size={16} />
+          <span>{savedBanner}</span>
+        </div>
+      )}
 
       {/* Plans Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
@@ -91,7 +129,11 @@ export default function PlanEditor() {
             </div>
 
             <div style={{ marginTop: '24px' }}>
-              <button className="btn btn-secondary btn-sm" style={{ width: '100%' }} onClick={() => alert(`Editing tier: ${plan.name}`)}>
+              <button 
+                className="btn btn-secondary btn-sm" 
+                style={{ width: '100%' }} 
+                onClick={() => setEditingPlan({ ...plan })}
+              >
                 <Edit3 size={13} />
                 <span>Configure Entitlements</span>
               </button>
@@ -99,6 +141,98 @@ export default function PlanEditor() {
           </div>
         ))}
       </div>
+
+      {/* Edit Tier Modal */}
+      {editingPlan && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(15, 23, 42, 0.45)',
+          backdropFilter: 'blur(4px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 9999,
+          padding: '20px'
+        }}>
+          <div className="edu-card" style={{ maxWidth: '480px', width: '100%', padding: '28px', boxShadow: 'var(--shadow-dropdown)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+              <h3 style={{ fontSize: '18px', fontWeight: '800', color: 'var(--text-primary)', margin: 0 }}>Configure {editingPlan.name}</h3>
+              <button className="btn btn-subtle btn-sm" onClick={() => setEditingPlan(null)}>
+                <X size={16} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSavePlan} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div className="form-group">
+                <label className="form-label">Tier Name</label>
+                <input 
+                  type="text" 
+                  className="form-input" 
+                  value={editingPlan.name}
+                  onChange={(e) => setEditingPlan({ ...editingPlan, name: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div className="form-group">
+                  <label className="form-label">Price ($)</label>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    value={editingPlan.price}
+                    onChange={(e) => setEditingPlan({ ...editingPlan, price: e.target.value })}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Period</label>
+                  <input 
+                    type="text" 
+                    className="form-input" 
+                    value={editingPlan.period}
+                    onChange={(e) => setEditingPlan({ ...editingPlan, period: e.target.value })}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div className="form-group">
+                  <label className="form-label">Student Seat Quota</label>
+                  <input 
+                    type="number" 
+                    className="form-input" 
+                    value={editingPlan.seats}
+                    onChange={(e) => setEditingPlan({ ...editingPlan, seats: Number(e.target.value) })}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Max Branches</label>
+                  <input 
+                    type="number" 
+                    className="form-input" 
+                    value={editingPlan.branches}
+                    onChange={(e) => setEditingPlan({ ...editingPlan, branches: Number(e.target.value) })}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                <button type="button" className="btn btn-secondary" onClick={() => setEditingPlan(null)}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary">
+                  Save Entitlements
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
     </div>
   );

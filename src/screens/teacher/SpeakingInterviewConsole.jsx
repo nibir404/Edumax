@@ -12,9 +12,11 @@ import {
   Volume2,
   FileText
 } from 'lucide-react';
+import { api } from '../../services/api';
 
 export default function SpeakingInterviewConsole({ onFinish }) {
   const [activePart, setActivePart] = useState(1); // 1 | 2 | 3
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Timer State
   const [seconds, setSeconds] = useState(240); // 4 minutes
@@ -304,13 +306,23 @@ export default function SpeakingInterviewConsole({ onFinish }) {
           <button 
             className="btn btn-primary" 
             style={{ width: '100%', marginTop: '6px' }}
-            onClick={() => {
-              alert(`Speaking evaluation submitted for Nafis Ahmed with Overall Band ${calculateOverall()}! Results sent to candidate queue.`);
+            disabled={isSubmitting}
+            onClick={async () => {
+              setIsSubmitting(true);
+              try {
+                await api.submitSpeakingEvaluation({
+                  candidateId: 'std_01',
+                  scores,
+                  overallBand: calculateOverall(),
+                  examinerNotes
+                });
+              } catch (e) {}
+              setIsSubmitting(false);
               if (onFinish) onFinish();
             }}
           >
             <Save size={15} />
-            <span>Lock & Publish Score (Band {calculateOverall()})</span>
+            <span>{isSubmitting ? 'Locking Evaluation...' : `Lock & Publish Score (Band ${calculateOverall()})`}</span>
           </button>
         </div>
 

@@ -47,6 +47,164 @@
   },
   "results": [
     {
+      "id": "MOCK-850",
+      "title": "Cambridge IELTS 19 - Full Mock 1 (Verified)",
+      "type": "Academic",
+      "date": "2026-10-05",
+      "status": "Evaluated",
+      "overallBand": 7.5,
+      "listening": 8.5,
+      "reading": 8,
+      "writing": 6.5,
+      "speaking": 7.5,
+      "examiner": "Dr. Sarah Jenkins & Edumax AI Engine",
+      "percentile": "93rd Percentile",
+      "reviewItems": [
+        {
+          "qNum": 1,
+          "skill": "Full Mock",
+          "prompt": "Tankas were utilized primarily in the humid coastal zones of eastern India.",
+          "studentAnswer": "No Answer",
+          "correctAnswer": "FALSE",
+          "isCorrect": false,
+          "explanation": "Paragraph A explicitly identifies Rajasthan as arid and semi-arid northwestern terrain, not humid coastal eastern India."
+        },
+        {
+          "qNum": 2,
+          "skill": "Full Mock",
+          "prompt": "Traditional tanka filtration relied on natural sedimentation.",
+          "studentAnswer": "No Answer",
+          "correctAnswer": "TRUE",
+          "isCorrect": false,
+          "explanation": "Paragraph B confirms natural sedimentation layers filtered pathogens with surprising efficacy."
+        },
+        {
+          "qNum": 3,
+          "skill": "Full Mock",
+          "prompt": "Modern municipal water grids successfully eliminated all drought vulnerability.",
+          "studentAnswer": "No Answer",
+          "correctAnswer": "FALSE",
+          "isCorrect": false,
+          "explanation": "Paragraph C states that recurring municipal shortages and depleted aquifers prompted restoration of indigenous systems."
+        },
+        {
+          "qNum": 4,
+          "skill": "Full Mock",
+          "prompt": "Primary mineral binder used in historic tanka masonry:",
+          "studentAnswer": "No Answer",
+          "correctAnswer": "lime mortar",
+          "isCorrect": false,
+          "explanation": "Paragraph B explicitly specifies \"Constructed utilizing lime mortar, clay, and locally sourced sandstone tiles\"."
+        }
+      ],
+      "writingFeedback": {
+        "band": 6.5,
+        "wordCount": 93,
+        "criteria": [
+          {
+            "name": "Task Response / Achievement",
+            "score": 5.5,
+            "feedback": "Strong central thesis; arguments supported with empirical rationale."
+          },
+          {
+            "name": "Coherence & Cohesion",
+            "score": 6.5,
+            "feedback": "Natural paragraph transitions; discourse markers deployed effectively."
+          },
+          {
+            "name": "Lexical Resource",
+            "score": 6.5,
+            "feedback": "Appropriate academic terminology with subtle collocation nuances."
+          },
+          {
+            "name": "Grammatical Range & Accuracy",
+            "score": 7,
+            "feedback": "Syntactically complex sentences with strong tense blending."
+          }
+        ],
+        "aiRewrite": "In contemporary society, an escalating consensus contends that technological disruption will precipitate substantial economic shifts. While apprehension surrounding automation is well-founded, I contend that AI will catalyze unprecedented economic opportunities that eclipse routine vocations.\n\nHistorically, mechanization transformed human enterprise rather than terminating it. When industrial steam power was inaugurated in the 19th century, manual tasks were supplanted; nonetheless, modern engineering and logistics disciplines emerged. In a parallel fashion, modern neural networks necessitate sophisticated human stewardship.\n\nTo conclude, despite transitional friction, the net outcome will cultivate high-yield industries and elevate human productivity."
+      }
+    },
+    {
+      "id": "MOCK-934",
+      "title": "Cambridge IELTS 19 - Full Mock 1 (Verified)",
+      "type": "Academic",
+      "date": "2026-10-05",
+      "status": "Evaluated",
+      "overallBand": 7.5,
+      "listening": 8.5,
+      "reading": 8,
+      "writing": 6.5,
+      "speaking": 7.5,
+      "examiner": "Dr. Sarah Jenkins & Edumax AI Engine",
+      "percentile": "93rd Percentile",
+      "reviewItems": [
+        {
+          "qNum": 1,
+          "skill": "Full Mock",
+          "prompt": "Tankas were utilized primarily in the humid coastal zones of eastern India.",
+          "studentAnswer": "No Answer",
+          "correctAnswer": "FALSE",
+          "isCorrect": false,
+          "explanation": "Paragraph A explicitly identifies Rajasthan as arid and semi-arid northwestern terrain, not humid coastal eastern India."
+        },
+        {
+          "qNum": 2,
+          "skill": "Full Mock",
+          "prompt": "Traditional tanka filtration relied on natural sedimentation.",
+          "studentAnswer": "No Answer",
+          "correctAnswer": "TRUE",
+          "isCorrect": false,
+          "explanation": "Paragraph B confirms natural sedimentation layers filtered pathogens with surprising efficacy."
+        },
+        {
+          "qNum": 3,
+          "skill": "Full Mock",
+          "prompt": "Modern municipal water grids successfully eliminated all drought vulnerability.",
+          "studentAnswer": "No Answer",
+          "correctAnswer": "FALSE",
+          "isCorrect": false,
+          "explanation": "Paragraph C states that recurring municipal shortages and depleted aquifers prompted restoration of indigenous systems."
+        },
+        {
+          "qNum": 4,
+          "skill": "Full Mock",
+          "prompt": "Primary mineral binder used in historic tanka masonry:",
+          "studentAnswer": "No Answer",
+          "correctAnswer": "lime mortar",
+          "isCorrect": false,
+          "explanation": "Paragraph B explicitly specifies \"Constructed utilizing lime mortar, clay, and locally sourced sandstone tiles\"."
+        }
+      ],
+      "writingFeedback": {
+        "band": 6.5,
+        "wordCount": 93,
+        "criteria": [
+          {
+            "name": "Task Response / Achievement",
+            "score": 5.5,
+            "feedback": "Strong central thesis; arguments supported with empirical rationale."
+          },
+          {
+            "name": "Coherence & Cohesion",
+            "score": 6.5,
+            "feedback": "Natural paragraph transitions; discourse markers deployed effectively."
+          },
+          {
+            "name": "Lexical Resource",
+            "score": 6.5,
+            "feedback": "Appropriate academic terminology with subtle collocation nuances."
+          },
+          {
+            "name": "Grammatical Range & Accuracy",
+            "score": 7,
+            "feedback": "Syntactically complex sentences with strong tense blending."
+          }
+        ],
+        "aiRewrite": "In contemporary society, an escalating consensus contends that technological disruption will precipitate substantial economic shifts. While apprehension surrounding automation is well-founded, I contend that AI will catalyze unprecedented economic opportunities that eclipse routine vocations.\n\nHistorically, mechanization transformed human enterprise rather than terminating it. When industrial steam power was inaugurated in the 19th century, manual tasks were supplanted; nonetheless, modern engineering and logistics disciplines emerged. In a parallel fashion, modern neural networks necessitate sophisticated human stewardship.\n\nTo conclude, despite transitional friction, the net outcome will cultivate high-yield industries and elevate human productivity."
+      }
+    },
+    {
       "id": "MOCK-161",
       "title": "Cambridge IELTS 19 - Full Mock 1 (Verified)",
       "type": "Academic",
@@ -330,6 +488,76 @@
   ],
   "batches": [
     {
+      "id": "BATCH-2300",
+      "name": "IELTS Academic Masterclass B-16",
+      "branch": "Gulshan Main Campus (HQ)",
+      "startDate": "2026-11-01",
+      "endDate": "2026-12-28",
+      "schedule": "Mon, Wed, Fri (6:30 PM - 8:30 PM)",
+      "assignedTeacher": "Dr. Sarah Jenkins",
+      "capacity": 30,
+      "room": "Gulshan Lab 304",
+      "avgBand": 0,
+      "progress": 0,
+      "status": "Active"
+    },
+    {
+      "id": "BATCH-1367",
+      "name": "IELTS Academic Masterclass B-16",
+      "branch": "Gulshan Main Campus (HQ)",
+      "startDate": "2026-11-01",
+      "endDate": "2026-12-28",
+      "schedule": "Mon, Wed, Fri (6:30 PM - 8:30 PM)",
+      "assignedTeacher": "Dr. Sarah Jenkins",
+      "capacity": 30,
+      "room": "Gulshan Lab 304",
+      "avgBand": 0,
+      "progress": 0,
+      "status": "Active"
+    },
+    {
+      "id": "BATCH-3142",
+      "name": "IELTS Academic Masterclass B-16",
+      "branch": "Gulshan Main Campus (HQ)",
+      "startDate": "2026-11-01",
+      "endDate": "2026-12-28",
+      "schedule": "Mon, Wed, Fri (6:30 PM - 8:30 PM)",
+      "assignedTeacher": "Dr. Sarah Jenkins",
+      "capacity": 30,
+      "room": "Gulshan Lab 304",
+      "avgBand": 0,
+      "progress": 0,
+      "status": "Active"
+    },
+    {
+      "id": "BATCH-9064",
+      "name": "IELTS Academic Masterclass B-16",
+      "branch": "Gulshan Main Campus (HQ)",
+      "startDate": "2026-11-01",
+      "endDate": "2026-12-28",
+      "schedule": "Mon, Wed, Fri (6:30 PM - 8:30 PM)",
+      "assignedTeacher": "Dr. Sarah Jenkins",
+      "capacity": 30,
+      "room": "Gulshan Lab 304",
+      "avgBand": 0,
+      "progress": 0,
+      "status": "Active"
+    },
+    {
+      "id": "BATCH-4899",
+      "name": "IELTS Academic Masterclass B-16",
+      "branch": "Gulshan Main Campus (HQ)",
+      "startDate": "2026-11-01",
+      "endDate": "2026-12-28",
+      "schedule": "Mon, Wed, Fri (6:30 PM - 8:30 PM)",
+      "assignedTeacher": "Dr. Sarah Jenkins",
+      "capacity": 30,
+      "room": "Gulshan Lab 304",
+      "avgBand": 0,
+      "progress": 0,
+      "status": "Active"
+    },
+    {
       "id": "BATCH-A12",
       "name": "IELTS Masterclass B-12 (Gulshan Evening)",
       "branch": "Gulshan Main Campus (HQ)",
@@ -559,6 +787,69 @@
     }
   ],
   "notifications": [
+    {
+      "id": "notif-1791193312850",
+      "title": "Exam Result Published: Band 7.5",
+      "body": "Your score for Cambridge IELTS 19 - Full Mock 1 is now available in your Performance Ledger.",
+      "time": "Just now",
+      "read": false
+    },
+    {
+      "id": "notif-1791193312050",
+      "title": "Speaking Interview Evaluated • Band 7.5",
+      "body": "Examiner Dr. Sarah Jenkins published your 4-criteria evaluation. Overall Band 7.5 awarded.",
+      "time": "Just now",
+      "read": false
+    },
+    {
+      "id": "notif-1791193121934",
+      "title": "Exam Result Published: Band 7.5",
+      "body": "Your score for Cambridge IELTS 19 - Full Mock 1 is now available in your Performance Ledger.",
+      "time": "Just now",
+      "read": false
+    },
+    {
+      "id": "notif-1791193121083",
+      "title": "Speaking Interview Evaluated • Band 7.5",
+      "body": "Examiner Dr. Sarah Jenkins published your 4-criteria evaluation. Overall Band 7.5 awarded.",
+      "time": "Just now",
+      "read": false
+    },
+    {
+      "id": "notif-1791193052875",
+      "title": "Speaking Interview Evaluated • Band 7.5",
+      "body": "Examiner Dr. Sarah Jenkins published your 4-criteria evaluation. Overall Band 7.5 awarded.",
+      "time": "Just now",
+      "read": false
+    },
+    {
+      "id": "notif-1791193008798",
+      "title": "Speaking Interview Evaluated • Band 7.5",
+      "body": "Examiner Dr. Sarah Jenkins published your 4-criteria evaluation. Overall Band 7.5 awarded.",
+      "time": "Just now",
+      "read": false
+    },
+    {
+      "id": "notif-1791192774544",
+      "title": "Speaking Interview Evaluated • Band 7.5",
+      "body": "Examiner Dr. Sarah Jenkins published your 4-criteria evaluation. Overall Band 7.5 awarded.",
+      "time": "Just now",
+      "read": false
+    },
+    {
+      "id": "notif-1791192659175",
+      "title": "Speaking Interview Evaluated • Band 7.5",
+      "body": "Examiner Dr. Sarah Jenkins published your 4-criteria evaluation. Overall Band 7.5 awarded.",
+      "time": "Just now",
+      "read": false
+    },
+    {
+      "id": "notif-1791192588884",
+      "title": "Speaking Interview Evaluated • Band 7.5",
+      "body": "Examiner Dr. Sarah Jenkins published your 4-criteria evaluation. Overall Band 7.5 awarded.",
+      "time": "Just now",
+      "read": false
+    },
     {
       "id": "notif-1791187522289",
       "title": "Official IELTS TRF Results Released",

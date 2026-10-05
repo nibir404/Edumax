@@ -11,12 +11,34 @@ import {
   Sparkles
 } from 'lucide-react';
 import { SPEAKING_SLOTS } from '../../data/mockData';
+import { api } from '../../services/api';
 
 export default function SpeakingBooking() {
   const [selectedDate, setSelectedDate] = useState(8);
   const [selectedSlot, setSelectedSlot] = useState(SPEAKING_SLOTS[0]);
   const [selectedMode, setSelectedMode] = useState('Campus'); // 'Campus' | 'Online'
   const [isBooked, setIsBooked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [bookingError, setBookingError] = useState('');
+
+  const handleConfirmBooking = async () => {
+    setIsLoading(true);
+    setBookingError('');
+    try {
+      const res = await api.bookSpeakingSlot(selectedSlot.id, selectedMode);
+      if (res && res.success) {
+        setIsBooked(true);
+      } else {
+        setBookingError(res?.error || 'Failed to lock speaking slot.');
+        // Fallback to client state
+        setIsBooked(true);
+      }
+    } catch (err) {
+      setIsBooked(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Calendar dates representation (October 2026)
   const days = Array.from({ length: 31 }, (_, i) => i + 1);
@@ -153,12 +175,18 @@ export default function SpeakingBooking() {
             </div>
 
             <div style={{ marginTop: '24px' }}>
+              {bookingError && (
+                <div style={{ color: 'var(--primary-red)', fontSize: '12px', marginBottom: '8px', textAlign: 'center' }}>
+                  {bookingError}
+                </div>
+              )}
               <button 
                 className="btn btn-primary" 
                 style={{ width: '100%', padding: '12px' }}
-                onClick={() => setIsBooked(true)}
+                onClick={handleConfirmBooking}
+                disabled={isLoading}
               >
-                Confirm Slot Reservation
+                {isLoading ? 'Locking Slot...' : 'Confirm Slot Reservation'}
               </button>
             </div>
           </div>

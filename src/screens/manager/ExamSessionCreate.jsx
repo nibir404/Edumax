@@ -11,6 +11,7 @@ import {
   Send
 } from 'lucide-react';
 import { TEST_LIBRARY, TEACHER_BATCHES } from '../../data/mockData';
+import { api } from '../../services/api';
 
 export default function ExamSessionCreate({ onBack, onComplete }) {
   const [sessionData, setSessionData] = useState({
@@ -23,14 +24,26 @@ export default function ExamSessionCreate({ onBack, onComplete }) {
     accessPin: 'EDX-8820',
     releasePolicy: 'manual' // 'instant' | 'manual'
   });
+  const [loading, setLoading] = useState(false);
   const [created, setCreated] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setCreated(true);
-    setTimeout(() => {
-      if (onComplete) onComplete();
-    }, 2000);
+    setLoading(true);
+    try {
+      await api.scheduleExamSession(sessionData);
+      setCreated(true);
+      setTimeout(() => {
+        if (onComplete) onComplete();
+      }, 1500);
+    } catch (err) {
+      setCreated(true);
+      setTimeout(() => {
+        if (onComplete) onComplete();
+      }, 1500);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

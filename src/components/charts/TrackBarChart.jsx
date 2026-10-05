@@ -21,7 +21,10 @@ export default function TrackBarChart({
   accentColor = '#0F172A',
   brandColor = '#C81E2E'
 }) {
-  const [activeIdx, setActiveIdx] = useState(6); // Default to latest (Oct)
+  const initialIdx = items.findIndex(i => i.isSelected);
+  const [activeIdx, setActiveIdx] = useState(initialIdx >= 0 ? initialIdx : Math.max(0, items.length - 1));
+  const safeIdx = (activeIdx >= 0 && activeIdx < items.length) ? activeIdx : Math.max(0, items.length - 1);
+  const activeItem = items[safeIdx] || { label: '', detail: '', value: 0 };
 
   return (
     <div style={{ width: '100%', position: 'relative', display: 'flex', flexDirection: 'column' }}>
@@ -172,7 +175,7 @@ export default function TrackBarChart({
       {/* Subtext info for selected month */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px', fontSize: '11.5px', color: '#64748B' }}>
         <div>
-          Selected: <strong style={{ color: '#0F172A' }}>{items[activeIdx].label} 2025</strong> — {items[activeIdx].detail}
+          Selected: <strong style={{ color: '#0F172A' }}>{activeItem.label}</strong> {activeItem.detail ? `— ${activeItem.detail}` : ''}
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: brandColor }} />

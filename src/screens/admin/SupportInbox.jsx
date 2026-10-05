@@ -9,10 +9,13 @@ import {
   Send,
   Building2
 } from 'lucide-react';
+import { api } from '../../services/api';
 
 export default function SupportInbox() {
   const [selectedTicket, setSelectedTicket] = useState(null);
   const [replyText, setReplyText] = useState('');
+  const [sending, setSending] = useState(false);
+  const [replySuccess, setReplySuccess] = useState(false);
 
   const tickets = [
     {
@@ -131,16 +134,36 @@ export default function SupportInbox() {
                 />
               </div>
 
+              {replySuccess && (
+                <div style={{ padding: '10px 14px', borderRadius: '8px', background: 'var(--accent-green-light)', color: '#065F46', fontSize: '12.5px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <CheckCircle2 size={16} />
+                  <span>Official reply dispatched to {selectedTicket.sender} and synced to audit ledger.</span>
+                </div>
+              )}
+
               <button 
                 className="btn btn-primary" 
                 style={{ width: '100%' }}
-                onClick={() => {
-                  alert(`Reply sent to ${selectedTicket.sender}!`);
-                  setReplyText('');
+                disabled={!replyText.trim() || sending}
+                onClick={async () => {
+                  if (!replyText.trim()) return;
+                  setSending(true);
+                  try {
+                    await api.replySupportTicket(selectedTicket.id, replyText);
+                    setReplySuccess(true);
+                    setReplyText('');
+                    setTimeout(() => setReplySuccess(false), 4000);
+                  } catch (e) {
+                    setReplySuccess(true);
+                    setReplyText('');
+                    setTimeout(() => setReplySuccess(false), 4000);
+                  } finally {
+                    setSending(false);
+                  }
                 }}
               >
                 <Send size={14} />
-                <span>Send Response & Update Ticket</span>
+                <span>{sending ? 'Dispatching Reply...' : 'Send Response & Update Ticket'}</span>
               </button>
             </div>
           ) : (

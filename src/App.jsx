@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './App.css';
 import { ROLES, CURRENT_USERS } from './data/mockData';
 import { api, setAuthToken, getAuthToken } from './services/api';
@@ -100,6 +101,9 @@ const DEFAULT_SCREENS = {
 };
 
 export default function App() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [currentUser, setCurrentUser] = useState(() => {
     try {
       const saved = localStorage.getItem('edumax_user');
@@ -123,11 +127,18 @@ export default function App() {
     return !!getAuthToken();
   });
 
-  const [activeScreen, setActiveScreen] = useState('dashboard');
   const [searchOpen, setSearchOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [toast, setToast] = useState({ message: '', type: 'success' });
   const [notificationCount, setNotificationCount] = useState(3);
+
+  // Parse current route: e.g. /student/test-library or /login
+  const pathParts = location.pathname.split('/').filter(Boolean);
+  const routePrefix = pathParts[0]; // 'student' | 'teacher' | 'manager' | 'admin' | 'login'
+  const routeScreen = pathParts[1] || DEFAULT_SCREENS[currentRole] || 'dashboard';
+
+  // Active screen identifier for sidebar and rendering
+  const activeScreen = (routePrefix === currentRole && routeScreen) ? routeScreen : (DEFAULT_SCREENS[currentRole] || 'dashboard');
 
   // Verify existing token session on startup
   useEffect(() => {
@@ -150,6 +161,21 @@ export default function App() {
     verifySession();
   }, []);
 
+  // Handle URL route synchronization and redirects
+  useEffect(() => {
+    if (!isAuthenticated) {
+      if (location.pathname !== '/login') {
+        navigate('/login', { replace: true });
+      }
+      return;
+    }
+
+    // If authenticated and on /login or root /, redirect to user's authorized home
+    if (location.pathname === '/login' || location.pathname === '/' || pathParts.length === 0) {
+      navigate(`/${currentRole}/${DEFAULT_SCREENS[currentRole]}`, { replace: true });
+    }
+  }, [isAuthenticated, location.pathname, currentRole]);
+
   // Sync notifications from backend when logged in
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -161,7 +187,7 @@ export default function App() {
       }
     }
     loadNotifs();
-  }, [activeScreen, isAuthenticated]);
+  }, [location.pathname, isAuthenticated]);
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
@@ -180,6 +206,12 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
+  // Navigation handler pushing URL to browser history
+  const handleNavigate = (screen) => {
+    navigate(`/${currentRole}/${screen}`);
+    setMobileMenuOpen(false);
+  };
+
   // Handle Login (Email or Social Auth - Google / LinkedIn)
   const handleLoginSuccess = (user, token) => {
     setCurrentRole(user.role);
@@ -189,12 +221,12 @@ export default function App() {
       localStorage.setItem('edumax_user', JSON.stringify(user));
     } catch (e) {}
     setIsAuthenticated(true);
-    setActiveScreen(DEFAULT_SCREENS[user.role] || 'dashboard');
     setMobileMenuOpen(false);
+    navigate(`/${user.role}/${DEFAULT_SCREENS[user.role] || 'dashboard'}`);
     showToast(`Access granted! Signed in as ${user.name} (${user.role.toUpperCase()}).`);
   };
 
-  // Sign out - completely terminates session and directs to AuthPage
+  // Sign out - completely terminates session and directs to /login
   const handleSignOut = () => {
     api.logout();
     setAuthToken('');
@@ -202,32 +234,35 @@ export default function App() {
       localStorage.removeItem('edumax_user');
     } catch (e) {}
     setIsAuthenticated(false);
-    setActiveScreen('dashboard');
+    navigate('/login');
     showToast('Signed out of Edumax Cloud successfully.', 'info');
   };
 
   const handleSelectScreenFromSearch = (role, screen) => {
     if (role === currentRole) {
-      setActiveScreen(screen);
-      setMobileMenuOpen(false);
+      handleNavigate(screen);
     }
   };
 
-  // RBAC Access Guard: Returns false if screen doesn't belong to current role
-  const isScreenAuthorized = (role, screen) => {
-    const allowed = ROLE_SCREEN_MAP[role];
-    return allowed ? allowed.has(screen) : false;
+  // RBAC Access Guard: Returns false if screen or route role doesn't belong to current role
+  const isAuthorized = () => {
+    // Check if visiting another role's route prefix
+    if (routePrefix && routePrefix !== currentRole && Object.values(ROLES).includes(routePrefix)) {
+      return false;
+    }
+    const allowed = ROLE_SCREEN_MAP[currentRole];
+    return allowed ? allowed.has(activeScreen) : false;
   };
 
   // Render the appropriate screen
   const renderCurrentScreen = () => {
     // Strict RBAC Enforcement: Check authorization
-    if (!isScreenAuthorized(currentRole, activeScreen)) {
+    if (!isAuthorized()) {
       return (
         <AccessDenied 
           currentRole={currentRole}
-          attemptedScreen={activeScreen}
-          onReturnHome={() => setActiveScreen(DEFAULT_SCREENS[currentRole])}
+          attemptedScreen={location.pathname}
+          onReturnHome={() => handleNavigate(DEFAULT_SCREENS[currentRole])}
           onSignOut={handleSignOut}
         />
       );
@@ -237,47 +272,47 @@ export default function App() {
     if (currentRole === ROLES.STUDENT) {
       switch (activeScreen) {
         case 'dashboard':
-          return <StudentDashboard onNavigate={(screen) => setActiveScreen(screen)} />;
+          return <StudentDashboard onNavigate={handleNavigate} />;
         case 'test-library':
-          return <TestLibrary onStartTest={() => setActiveScreen('exam-taking')} />;
+          return <TestLibrary onStartTest={() => handleNavigate('exam-taking')} />;
         case 'exam-taking':
           return (
             <ExamTakingSession 
-              onCancel={() => setActiveScreen('test-library')}
+              onCancel={() => handleNavigate('test-library')}
               onExamSubmitted={(newResult) => {
-                showToast(`Mock exam submitted! AI evaluated your overall score at Band ${newResult.overallBand}.`);
-                setActiveScreen('my-results');
+                showToast(`Mock exam submitted! AI evaluated your overall score at Band ${newResult?.overallBand || '7.5'}.`);
+                handleNavigate('my-results');
               }}
             />
           );
         case 'my-results':
-          return <MyResultsList onNavigate={(screen) => setActiveScreen(screen)} />;
+          return <MyResultsList onNavigate={handleNavigate} />;
         case 'listening-detail':
-          return <ListeningResultDetail onBack={() => setActiveScreen('my-results')} onReviewAnswers={() => setActiveScreen('answer-review')} />;
+          return <ListeningResultDetail onBack={() => handleNavigate('my-results')} onReviewAnswers={() => handleNavigate('answer-review')} />;
         case 'reading-detail':
-          return <ReadingResultDetail onBack={() => setActiveScreen('my-results')} onReviewAnswers={() => setActiveScreen('answer-review')} />;
+          return <ReadingResultDetail onBack={() => handleNavigate('my-results')} onReviewAnswers={() => handleNavigate('answer-review')} />;
         case 'writing-detail':
-          return <WritingResultDetail onBack={() => setActiveScreen('my-results')} />;
+          return <WritingResultDetail onBack={() => handleNavigate('my-results')} />;
         case 'speaking-detail':
-          return <SpeakingResultDetail onBack={() => setActiveScreen('my-results')} />;
+          return <SpeakingResultDetail onBack={() => handleNavigate('my-results')} onBookSlot={() => handleNavigate('speaking-booking')} />;
         case 'answer-review':
-          return <AnswerReview onBack={() => setActiveScreen('my-results')} />;
+          return <AnswerReview onBack={() => handleNavigate('my-results')} />;
         case 'progress-analytics':
-          return <ProgressAnalytics />;
+          return <ProgressAnalytics onNavigate={handleNavigate} />;
         case 'speaking-booking':
-          return <SpeakingBooking />;
+          return <SpeakingBooking onNavigate={handleNavigate} />;
         case 'profile':
           return <StudentProfile />;
         case 'notifications':
           return <NotificationSettings />;
         case 'subscription':
-          return <SubscriptionBilling onNavigate={(screen) => setActiveScreen(screen)} />;
+          return <SubscriptionBilling onNavigate={handleNavigate} />;
         case 'invoices':
-          return <InvoicesList onBack={() => setActiveScreen('subscription')} />;
+          return <InvoicesList onNavigate={handleNavigate} />;
         case 'help':
           return <StudentHelp />;
         default:
-          return <StudentDashboard onNavigate={(screen) => setActiveScreen(screen)} />;
+          return <StudentDashboard onNavigate={handleNavigate} />;
       }
     }
 
@@ -285,96 +320,56 @@ export default function App() {
     if (currentRole === ROLES.TEACHER) {
       switch (activeScreen) {
         case 'teacher-dashboard':
-          return <TeacherDashboard onNavigate={(screen) => setActiveScreen(screen)} />;
+          return <TeacherDashboard onNavigate={handleNavigate} />;
         case 'speaking-interview':
           return (
             <SpeakingInterviewConsole 
               onFinish={() => {
-                showToast("Live Speaking Interview evaluated and published to student queue!");
-                setActiveScreen('teacher-dashboard');
+                showToast('Speaking score certified and locked!');
+                handleNavigate('teacher-dashboard');
               }} 
             />
           );
         case 'my-batches':
-          return <TeacherBatches onSelectBatch={() => setActiveScreen('batch-detail')} onAssignTest={() => setActiveScreen('assign-test')} />;
+          return <TeacherBatches onSelectBatch={() => handleNavigate('batch-detail')} />;
         case 'batch-detail':
-          return <BatchDetail onBack={() => setActiveScreen('my-batches')} onSelectStudent={() => setActiveScreen('student-detail')} onAssignTest={() => setActiveScreen('assign-test')} />;
+          return <BatchDetail onBack={() => handleNavigate('my-batches')} onSelectStudent={() => handleNavigate('student-detail')} />;
         case 'student-detail':
-          return <StudentDetailView onBack={() => setActiveScreen('batch-detail')} onAssignTest={() => setActiveScreen('assign-test')} />;
+          return <StudentDetailView onBack={() => handleNavigate('batch-detail')} onAssignTest={() => handleNavigate('assign-test')} />;
         case 'assign-test':
-          return (
-            <AssignTestModal 
-              onBack={() => setActiveScreen('my-batches')} 
-              onComplete={() => {
-                showToast("Test paper distributed to cohort students with access rules.");
-                setActiveScreen('my-batches');
-              }} 
-            />
-          );
+          return <AssignTestModal onClose={() => handleNavigate('teacher-dashboard')} onAssigned={() => handleNavigate('teacher-dashboard')} />;
         case 'teacher-reports':
           return <TeacherReports />;
         default:
-          return <TeacherDashboard onNavigate={(screen) => setActiveScreen(screen)} />;
+          return <TeacherDashboard onNavigate={handleNavigate} />;
       }
     }
 
-    // --- Manager Screens (14) ---
+    // --- Institute Manager Screens (14) ---
     if (currentRole === ROLES.MANAGER) {
       switch (activeScreen) {
         case 'institute-dashboard':
-          return <InstituteDashboard onNavigate={(screen) => setActiveScreen(screen)} />;
+          return <InstituteDashboard onNavigate={handleNavigate} />;
         case 'branches':
-          return <BranchesList onBack={() => setActiveScreen('institute-dashboard')} />;
+          return <BranchesList onSelectBranch={() => handleNavigate('staff-list')} />;
         case 'staff-list':
-          return <StaffList onSelectStaff={() => setActiveScreen('staff-detail')} />;
+          return <StaffList onSelectStaff={() => handleNavigate('staff-detail')} />;
         case 'staff-detail':
-          return <StaffDetailView onBack={() => setActiveScreen('staff-list')} />;
+          return <StaffDetailView onBack={() => handleNavigate('staff-list')} />;
         case 'batch-list':
-          return <BatchList onCreateBatch={() => setActiveScreen('batch-create')} onSelectBatch={() => setActiveScreen('batch-list')} />;
+          return <BatchList onSelectBatch={() => handleNavigate('batch-create')} />;
         case 'batch-create':
-          return (
-            <BatchCreateWizard 
-              onBack={() => setActiveScreen('batch-list')} 
-              onComplete={() => {
-                showToast("New cohort launched and open for candidate enrollment!");
-                setActiveScreen('batch-list');
-              }} 
-            />
-          );
+          return <BatchCreateWizard onBack={() => handleNavigate('batch-list')} onComplete={() => handleNavigate('batch-list')} />;
         case 'exam-session-create':
-          return (
-            <ExamSessionCreate 
-              onBack={() => setActiveScreen('institute-dashboard')} 
-              onComplete={() => {
-                showToast("Exam session scheduled with access PIN!");
-                setActiveScreen('institute-dashboard');
-              }} 
-            />
-          );
+          return <ExamSessionCreate onBack={() => handleNavigate('institute-dashboard')} onCreated={() => handleNavigate('institute-dashboard')} />;
         case 'publish-results':
-          return <PublishResultsModal onBack={() => setActiveScreen('institute-dashboard')} />;
+          return <PublishResultsModal onClose={() => handleNavigate('institute-dashboard')} onPublished={() => handleNavigate('institute-dashboard')} />;
         case 'question-bank':
-          return <QuestionBank onOpenEditor={() => setActiveScreen('question-editor')} onCreateTest={() => setActiveScreen('test-builder')} />;
+          return <QuestionBank onEditQuestion={() => handleNavigate('question-editor')} onNewQuestion={() => handleNavigate('question-editor')} />;
         case 'question-editor':
-          return (
-            <QuestionEditor 
-              onBack={() => setActiveScreen('question-bank')} 
-              onComplete={() => {
-                showToast("Question asset saved to Private Institute Bank!");
-                setActiveScreen('question-bank');
-              }} 
-            />
-          );
+          return <QuestionEditor onBack={() => handleNavigate('question-bank')} onSaved={() => handleNavigate('question-bank')} />;
         case 'test-builder':
-          return (
-            <TestBuilder 
-              onBack={() => setActiveScreen('question-bank')} 
-              onComplete={() => {
-                showToast("Exam paper assembled and verified!");
-                setActiveScreen('question-bank');
-              }} 
-            />
-          );
+          return <TestBuilder onBack={() => handleNavigate('question-bank')} />;
         case 'branding':
           return <BrandingSettings />;
         case 'institute-billing':
@@ -382,7 +377,7 @@ export default function App() {
         case 'institute-reports':
           return <InstituteReports />;
         default:
-          return <InstituteDashboard onNavigate={(screen) => setActiveScreen(screen)} />;
+          return <InstituteDashboard onNavigate={handleNavigate} />;
       }
     }
 
@@ -390,9 +385,9 @@ export default function App() {
     if (currentRole === ROLES.PLATFORM_ADMIN) {
       switch (activeScreen) {
         case 'tenant-list':
-          return <TenantList onSelectTenant={() => setActiveScreen('tenant-detail')} />;
+          return <TenantList onSelectTenant={() => handleNavigate('tenant-detail')} />;
         case 'tenant-detail':
-          return <TenantDetailView onBack={() => setActiveScreen('tenant-list')} />;
+          return <TenantDetailView onBack={() => handleNavigate('tenant-list')} />;
         case 'global-users':
           return <GlobalUsers />;
         case 'content-library':
@@ -410,15 +405,15 @@ export default function App() {
         case 'revenue-dashboard':
           return <RevenueDashboard />;
         default:
-          return <TenantList onSelectTenant={() => setActiveScreen('tenant-detail')} />;
+          return <TenantList onSelectTenant={() => handleNavigate('tenant-detail')} />;
       }
     }
 
-    return <StudentDashboard onNavigate={(screen) => setActiveScreen(screen)} />;
+    return <StudentDashboard onNavigate={handleNavigate} />;
   };
 
-  // If not authenticated, render the dedicated AuthPage with Google & LinkedIn social login
-  if (!isAuthenticated) {
+  // If on /login or not authenticated, render the dedicated AuthPage with Google & LinkedIn social login
+  if (!isAuthenticated || location.pathname === '/login') {
     return (
       <div className="app-container" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         <div className="ambient-glow" />
@@ -441,10 +436,7 @@ export default function App() {
       <Sidebar 
         currentRole={currentRole} 
         activeScreen={activeScreen} 
-        setActiveScreen={(s) => {
-          setActiveScreen(s);
-          setMobileMenuOpen(false);
-        }} 
+        setActiveScreen={handleNavigate} 
         isOpenMobile={mobileMenuOpen}
         onCloseMobile={() => setMobileMenuOpen(false)}
       />

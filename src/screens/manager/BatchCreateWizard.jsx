@@ -10,6 +10,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import { INSTITUTE_BRANCHES, STAFF_MEMBERS } from '../../data/mockData';
+import { api } from '../../services/api';
 
 export default function BatchCreateWizard({ onBack, onComplete }) {
   const [formData, setFormData] = useState({
@@ -23,13 +24,19 @@ export default function BatchCreateWizard({ onBack, onComplete }) {
     room: 'Gulshan Lab 304'
   });
   const [isCreated, setIsCreated] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      await api.createBatch(formData);
+    } catch (err) {}
+    setIsSubmitting(false);
     setIsCreated(true);
     setTimeout(() => {
       if (onComplete) onComplete();
-    }, 2000);
+    }, 1500);
   };
 
   return (

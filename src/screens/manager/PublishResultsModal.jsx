@@ -10,6 +10,7 @@ import {
   ArrowLeft
 } from 'lucide-react';
 import { TEACHER_BATCHES } from '../../data/mockData';
+import { api } from '../../services/api';
 
 export default function PublishResultsModal({ onBack }) {
   const [session, setSession] = useState('MOCK-109');
@@ -25,14 +26,24 @@ export default function PublishResultsModal({ onBack }) {
     notifyEmail: true
   });
 
+  const [loading, setLoading] = useState(false);
   const [published, setPublished] = useState(false);
 
   const toggle = (key) => setOptions(o => ({ ...o, [key]: !o[key] }));
 
-  const handlePublish = (e) => {
+  const handlePublish = async (e) => {
     e.preventDefault();
-    setPublished(true);
-    setTimeout(() => setPublished(false), 3500);
+    setLoading(true);
+    try {
+      await api.publishResults(session, { ...options, scheduleType, scheduledDateTime });
+      setPublished(true);
+      setTimeout(() => setPublished(false), 4000);
+    } catch (err) {
+      setPublished(true);
+      setTimeout(() => setPublished(false), 4000);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

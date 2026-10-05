@@ -13,16 +13,19 @@
     "lint": "oxlint",
     "test:rbac": "node test/rbac.test.js",
     "test:concurrency": "node test/concurrency.test.js",
-    "test": "npm run test:rbac && npm run test:concurrency"
+    "test:e2e": "node e2e/runner.js",
+    "test": "npm run test:rbac && npm run test:concurrency && npm run test:e2e"
   },
   "dependencies": {
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "lucide-react": "^1.52.0",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",

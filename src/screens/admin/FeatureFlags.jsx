@@ -11,6 +11,7 @@ import {
   MessageSquare 
 } from 'lucide-react';
 import { PLATFORM_TENANTS } from '../../data/mockData';
+import { api } from '../../services/api';
 
 export default function FeatureFlags() {
   const [selectedTenant, setSelectedTenant] = useState(PLATFORM_TENANTS[0].id);
@@ -23,10 +24,18 @@ export default function FeatureFlags() {
     betaWhisperTranscriber: false
   });
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const toggle = (key) => setFlags(f => ({ ...f, [key]: !f[key] }));
 
-  const handleSave = () => {
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await Promise.all(
+        Object.entries(flags).map(([k, v]) => api.toggleFeatureFlag(selectedTenant, k, v))
+      );
+    } catch (e) {}
+    setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
   };

@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { TEST_LIBRARY, TEACHER_BATCHES } from '../../data/mockData';
 
-export default function AssignTestModal({ onBack, onComplete }) {
+export default function AssignTestModal({ onBack, onClose, onComplete, onAssigned }) {
   const [selectedTest, setSelectedTest] = useState(TEST_LIBRARY[0].id);
   const [selectedBatch, setSelectedBatch] = useState(TEACHER_BATCHES[0].id);
   const [deadline, setDeadline] = useState('2026-10-12T23:59');
@@ -19,12 +19,19 @@ export default function AssignTestModal({ onBack, onComplete }) {
   const [releaseMode, setReleaseMode] = useState('instant'); // 'instant' | 'examinerApproval'
   const [isAssigned, setIsAssigned] = useState(false);
 
+  const handleClose = () => {
+    if (onBack) onBack();
+    else if (onClose) onClose();
+  };
+
   const handleAssign = (e) => {
     e.preventDefault();
     setIsAssigned(true);
     setTimeout(() => {
       if (onComplete) onComplete();
-    }, 2000);
+      else if (onAssigned) onAssigned();
+      else if (onClose) onClose();
+    }, 1500);
   };
 
   return (
@@ -32,7 +39,7 @@ export default function AssignTestModal({ onBack, onComplete }) {
       
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <button className="btn btn-secondary btn-sm" onClick={onBack}>
+        <button className="btn btn-secondary btn-sm" onClick={handleClose}>
           <ArrowLeft size={14} />
           <span>Cancel & Back</span>
         </button>
