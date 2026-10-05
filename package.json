@@ -14,7 +14,8 @@
     "test:rbac": "node test/rbac.test.js",
     "test:concurrency": "node test/concurrency.test.js",
     "test:e2e": "node e2e/runner.js",
-    "test": "npm run test:rbac && npm run test:concurrency && npm run test:e2e"
+    "test": "npm run test:rbac && npm run test:concurrency && npm run test:e2e",
+    "deploy": "node scripts/deploy-funchole.js"
   },
   "dependencies": {
     "cors": "^2.8.6",

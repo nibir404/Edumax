@@ -1,4 +1,5 @@
 import React from 'react';
+import edumaxLogo from '../assets/logoBase64.js';
 
 export default function Logo({ size = 'medium', showSubtitle = true, inverted = false }) {
   const isSmall = size === 'small';
@@ -6,7 +7,7 @@ export default function Logo({ size = 'medium', showSubtitle = true, inverted = 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none' }}>
       <img 
-        src="/edumax-logo.png" 
+        src={edumaxLogo} 
         alt="Edumax Consultancy" 
         style={{
           height: isSmall ? '32px' : '42px',

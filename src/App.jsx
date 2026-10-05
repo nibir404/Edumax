@@ -100,6 +100,16 @@ const DEFAULT_SCREENS = {
   [ROLES.PLATFORM_ADMIN]: 'tenant-list'
 };
 
+const normalizeRole = (r) => {
+  if (!r) return 'student';
+  const lower = String(r).toLowerCase();
+  if (lower.includes('student')) return 'student';
+  if (lower.includes('teach') || lower.includes('examiner')) return 'teacher';
+  if (lower.includes('manag') || lower.includes('director') || lower.includes('owner')) return 'manager';
+  if (lower.includes('admin')) return 'admin';
+  return lower;
+};
+
 export default function App() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -117,7 +127,7 @@ export default function App() {
       const saved = localStorage.getItem('edumax_user');
       if (saved) {
         const u = JSON.parse(saved);
-        if (u.role) return u.role;
+        if (u.role) return normalizeRole(u.role);
       }
     } catch (e) {}
     return ROLES.STUDENT;
@@ -147,8 +157,9 @@ export default function App() {
       if (existingToken) {
         const res = await api.getMe();
         if (res && res.success && res.data) {
-          setCurrentUser(res.data);
-          setCurrentRole(res.data.role);
+          const roleKey = normalizeRole(res.data.role);
+          setCurrentUser({ ...res.data, role: roleKey });
+          setCurrentRole(roleKey);
           setIsAuthenticated(true);
         } else if (res && !res.success) {
           api.logout();
@@ -172,7 +183,7 @@ export default function App() {
 
     // If authenticated and on /login or root /, redirect to user's authorized home
     if (location.pathname === '/login' || location.pathname === '/' || pathParts.length === 0) {
-      navigate(`/${currentRole}/${DEFAULT_SCREENS[currentRole]}`, { replace: true });
+      navigate(`/${currentRole}/${DEFAULT_SCREENS[currentRole] || 'dashboard'}`, { replace: true });
     }
   }, [isAuthenticated, location.pathname, currentRole]);
 
@@ -214,16 +225,18 @@ export default function App() {
 
   // Handle Login (Email or Social Auth - Google / LinkedIn)
   const handleLoginSuccess = (user, token) => {
-    setCurrentRole(user.role);
-    setCurrentUser(user);
+    const roleKey = normalizeRole(user.role);
+    const normalizedUser = { ...user, role: roleKey };
+    setCurrentRole(roleKey);
+    setCurrentUser(normalizedUser);
     setAuthToken(token);
     try {
-      localStorage.setItem('edumax_user', JSON.stringify(user));
+      localStorage.setItem('edumax_user', JSON.stringify(normalizedUser));
     } catch (e) {}
     setIsAuthenticated(true);
     setMobileMenuOpen(false);
-    navigate(`/${user.role}/${DEFAULT_SCREENS[user.role] || 'dashboard'}`);
-    showToast(`Access granted! Signed in as ${user.name} (${user.role.toUpperCase()}).`);
+    navigate(`/${roleKey}/${DEFAULT_SCREENS[roleKey] || 'dashboard'}`);
+    showToast(`Access granted! Signed in as ${user.name} (${roleKey.toUpperCase()}).`);
   };
 
   // Sign out - completely terminates session and directs to /login
