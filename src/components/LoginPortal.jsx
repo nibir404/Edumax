@@ -4,13 +4,10 @@ import {
   Award, 
   Building2, 
   ShieldAlert, 
-  Lock, 
-  Check, 
-  ArrowRight, 
   X,
-  Sparkles,
+  ArrowRight, 
   Zap,
-  KeyRound
+  Check
 } from 'lucide-react';
 import Logo from './Logo';
 import { api } from '../services/api';
@@ -24,7 +21,6 @@ const DEMO_PERSONAS = [
     description: 'IELTS candidate preparing for academic test with practice tests, band analytics & AI feedback.',
     icon: GraduationCap,
     badge: 'Target Band 8.0',
-    color: '#3b82f6',
     screensCount: 15
   },
   {
@@ -35,7 +31,6 @@ const DEMO_PERSONAS = [
     description: 'Speaking interviewer & writing examiner reviewing candidate essays, audio recordings and cohorts.',
     icon: Award,
     badge: 'Senior Evaluator',
-    color: '#8b5cf6',
     screensCount: 7
   },
   {
@@ -46,7 +41,6 @@ const DEMO_PERSONAS = [
     description: 'Branch administrator managing 5 campuses, staff, cohort batches, exam sessions & white-label settings.',
     icon: Building2,
     badge: '5 Branches Active',
-    color: '#C81E2E',
     screensCount: 14
   },
   {
@@ -57,7 +51,6 @@ const DEMO_PERSONAS = [
     description: 'SaaS multi-tenant controller overlooking all institutes, revenue, system health, coupons & feature flags.',
     icon: ShieldAlert,
     badge: 'Super Admin',
-    color: '#10b981',
     screensCount: 10
   }
 ];
@@ -114,39 +107,37 @@ export default function LoginPortal({ isOpen, onClose, onLoginSuccess, currentRo
   };
 
   return (
-    <div className="modal-overlay" style={{ zIndex: 9999, background: 'rgba(15, 23, 42, 0.75)', backdropFilter: 'blur(8px)' }}>
-      <div className="modal-content" style={{ maxWidth: '820px', width: '92%', borderRadius: '20px', padding: '0', overflow: 'hidden' }}>
+    <div className="modal-overlay">
+      <div className="modal-content" style={{ maxWidth: '800px', width: '92%', borderRadius: 'var(--radius-xl)', padding: 0, overflow: 'hidden' }}>
         
-        {/* Header Banner */}
+        {/* Header - Minimal Dark Slate */}
         <div style={{
-          background: 'linear-gradient(135deg, #1F242D 0%, #151922 100%)',
-          padding: '28px 32px',
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
-          position: 'relative',
+          background: 'var(--brand-dark)',
+          padding: '24px 28px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between'
         }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px' }}>
               <Logo size="small" />
               <span style={{ 
-                background: 'rgba(200, 30, 46, 0.2)', 
-                color: 'var(--primary-red)', 
-                fontSize: '11px', 
+                background: 'rgba(255,255,255,0.1)', 
+                color: '#FFFFFF', 
+                fontSize: '10.5px', 
                 fontWeight: '700', 
-                padding: '3px 8px', 
-                borderRadius: '6px',
-                letterSpacing: '0.5px'
+                padding: '2px 7px', 
+                borderRadius: '4px',
+                letterSpacing: '0.4px'
               }}>
-                ENTERPRISE RBAC GATEWAY
+                ROLE-BASED PORTALS
               </span>
             </div>
-            <h2 style={{ fontSize: '20px', fontWeight: '800', color: '#ffffff', margin: 0 }}>
-              SaaS Role-Based Access Management
+            <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#FFFFFF', margin: 0 }}>
+              Edumax Portal Switcher
             </h2>
-            <p style={{ fontSize: '13px', color: '#94a3b8', margin: '4px 0 0 0' }}>
-              Select a persona below. Each role operates within its own strictly isolated dashboard.
+            <p style={{ fontSize: '12.5px', color: '#94A3B8', margin: '3px 0 0 0' }}>
+              Select a persona to enter that role's isolated, dedicated workspace.
             </p>
           </div>
 
@@ -156,79 +147,81 @@ export default function LoginPortal({ isOpen, onClose, onLoginSuccess, currentRo
               style={{
                 background: 'rgba(255,255,255,0.08)',
                 border: 'none',
-                borderRadius: '50%',
-                width: '36px',
-                height: '36px',
+                borderRadius: 'var(--radius-sm)',
+                width: '32px',
+                height: '32px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#fff',
+                color: '#FFFFFF',
                 cursor: 'pointer'
               }}
             >
-              <X size={18} />
+              <X size={16} />
             </button>
           )}
         </div>
 
         {/* Modal Body */}
-        <div style={{ padding: '28px 32px', maxHeight: '70vh', overflowY: 'auto' }}>
+        <div style={{ padding: '24px 28px', maxHeight: '72vh', overflowY: 'auto' }}>
           
           {errorMsg && (
             <div style={{
-              background: 'rgba(220, 38, 38, 0.1)',
-              border: '1px solid rgba(220, 38, 38, 0.3)',
+              background: 'var(--primary-red-subtle)',
+              border: '1px solid var(--primary-red-border)',
               color: 'var(--primary-red)',
-              borderRadius: '8px',
-              padding: '12px 16px',
-              fontSize: '13px',
+              borderRadius: 'var(--radius-md)',
+              padding: '10px 14px',
+              fontSize: '12.5px',
               fontWeight: '500',
-              marginBottom: '20px'
+              marginBottom: '16px'
             }}>
               {errorMsg}
             </div>
           )}
 
-          {/* Mode Switcher Tabs */}
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '20px' }}>
+          {/* Clean Segmented Tab Switcher */}
+          <div style={{ display: 'flex', gap: '6px', marginBottom: '18px', background: 'var(--bg-subtle)', padding: '3px', borderRadius: 'var(--radius-md)' }}>
             <button
               onClick={() => setUseCustomCreds(false)}
               className="btn"
               style={{
                 flex: 1,
-                padding: '10px',
-                borderRadius: '10px',
-                fontSize: '13px',
+                padding: '8px',
+                borderRadius: 'var(--radius-sm)',
+                fontSize: '12.5px',
                 fontWeight: '600',
-                background: !useCustomCreds ? 'var(--primary-red)' : 'var(--surface-color-subtle)',
-                color: !useCustomCreds ? '#fff' : 'var(--text-secondary)',
-                border: '1px solid var(--border-color)',
+                background: !useCustomCreds ? 'var(--bg-card)' : 'transparent',
+                color: !useCustomCreds ? 'var(--text-primary)' : 'var(--text-secondary)',
+                border: !useCustomCreds ? '1px solid var(--border-color)' : 'none',
+                boxShadow: !useCustomCreds ? 'var(--shadow-sm)' : 'none',
                 cursor: 'pointer'
               }}
             >
-              One-Click Role Selection (4 Personas)
+              4 Demo Personas (One-Click)
             </button>
             <button
               onClick={() => setUseCustomCreds(true)}
               className="btn"
               style={{
                 flex: 1,
-                padding: '10px',
-                borderRadius: '10px',
-                fontSize: '13px',
+                padding: '8px',
+                borderRadius: 'var(--radius-sm)',
+                fontSize: '12.5px',
                 fontWeight: '600',
-                background: useCustomCreds ? 'var(--primary-red)' : 'var(--surface-color-subtle)',
-                color: useCustomCreds ? '#fff' : 'var(--text-secondary)',
-                border: '1px solid var(--border-color)',
+                background: useCustomCreds ? 'var(--bg-card)' : 'transparent',
+                color: useCustomCreds ? 'var(--text-primary)' : 'var(--text-secondary)',
+                border: useCustomCreds ? '1px solid var(--border-color)' : 'none',
+                boxShadow: useCustomCreds ? 'var(--shadow-sm)' : 'none',
                 cursor: 'pointer'
               }}
             >
-              Enter Custom Credentials
+              Custom Credentials
             </button>
           </div>
 
           {!useCustomCreds ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(310px, 1fr))', gap: '14px' }}>
               {DEMO_PERSONAS.map((persona) => {
                 const Icon = persona.icon;
                 const isCurrent = currentRole === persona.role;
@@ -238,88 +231,80 @@ export default function LoginPortal({ isOpen, onClose, onLoginSuccess, currentRo
                     key={persona.role}
                     onClick={() => handleSelectRole(persona)}
                     style={{
-                      background: 'var(--surface-color)',
+                      background: 'var(--bg-card)',
                       border: isCurrent 
-                        ? '2px solid var(--primary-red)' 
+                        ? '1.5px solid var(--primary-red)' 
                         : '1px solid var(--border-color)',
-                      borderRadius: '14px',
-                      padding: '20px',
+                      borderRadius: 'var(--radius-lg)',
+                      padding: '18px',
                       cursor: 'pointer',
-                      transition: 'all 0.2s ease',
+                      transition: 'all 0.15s ease',
                       position: 'relative',
                       display: 'flex',
                       flexDirection: 'column',
                       justifyContent: 'space-between',
-                      boxShadow: isCurrent ? '0 4px 16px rgba(200, 30, 46, 0.12)' : 'none'
+                      boxShadow: isCurrent ? '0 2px 8px rgba(200, 30, 46, 0.08)' : 'var(--shadow-card)'
                     }}
                     onMouseEnter={(e) => {
-                      if (!isCurrent) e.currentTarget.style.borderColor = 'var(--text-muted)';
+                      if (!isCurrent) e.currentTarget.style.borderColor = 'var(--border-hover)';
                     }}
                     onMouseLeave={(e) => {
                       if (!isCurrent) e.currentTarget.style.borderColor = 'var(--border-color)';
                     }}
                   >
                     <div>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
                         <div style={{
-                          width: '40px',
-                          height: '40px',
-                          borderRadius: '10px',
-                          background: `${persona.color}15`,
-                          color: persona.color,
+                          width: '36px',
+                          height: '36px',
+                          borderRadius: 'var(--radius-md)',
+                          background: isCurrent ? 'var(--primary-red-subtle)' : 'var(--bg-subtle)',
+                          color: isCurrent ? 'var(--primary-red)' : 'var(--brand-dark)',
                           display: 'flex',
                           alignItems: 'center',
-                          justifyContent: 'center'
-                        }}>
-                          <Icon size={22} />
-                        </div>
-
-                        <span style={{
-                          fontSize: '11px',
-                          fontWeight: '700',
-                          padding: '3px 8px',
-                          borderRadius: '6px',
-                          background: 'var(--surface-color-subtle)',
-                          color: 'var(--text-primary)',
+                          justifyContent: 'center',
                           border: '1px solid var(--border-color)'
                         }}>
+                          <Icon size={18} />
+                        </div>
+
+                        <span className="badge" style={{ fontSize: '11px' }}>
                           {persona.badge}
                         </span>
                       </div>
 
-                      <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '4px' }}>
-                        <h3 style={{ fontSize: '15.5px', fontWeight: '700', color: 'var(--text-primary)', margin: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '3px' }}>
+                        <h3 style={{ fontSize: '14.5px', fontWeight: '700', color: 'var(--text-primary)', margin: 0 }}>
                           {persona.title}
                         </h3>
-                        <span style={{ fontSize: '11.5px', color: 'var(--text-muted)' }}>
-                          ({persona.screensCount} screens)
+                        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                          ({persona.screensCount} views)
                         </span>
                       </div>
 
-                      <div style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '4px' }}>
+                      <div style={{ fontSize: '12.5px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '2px' }}>
                         {persona.name}
                       </div>
 
-                      <div style={{ fontSize: '11.5px', color: 'var(--text-muted)', fontFamily: 'monospace', marginBottom: '10px' }}>
+                      <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', marginBottom: '8px' }}>
                         {persona.email}
                       </div>
 
-                      <p style={{ fontSize: '12.5px', color: 'var(--text-secondary)', lineHeight: '1.5', margin: 0 }}>
+                      <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.45', margin: 0 }}>
                         {persona.description}
                       </p>
                     </div>
 
-                    <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                        {isCurrent ? '● Active Session' : 'Click to Switch'}
+                    <div style={{ marginTop: '14px', paddingTop: '10px', borderTop: '1px solid var(--border-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span style={{ fontSize: '11.5px', color: 'var(--text-muted)' }}>
+                        {isCurrent ? '● Active' : 'Click to Enter'}
                       </span>
                       <button 
-                        className={`btn ${isCurrent ? 'btn-secondary' : 'btn-primary'}`}
-                        style={{ padding: '6px 14px', fontSize: '12px' }}
+                        className={`btn ${isCurrent ? 'btn-secondary' : 'btn-primary'} btn-sm`}
                         disabled={loading}
                       >
-                        {isCurrent ? 'Signed In' : 'Enter Portal'}
-                        <ArrowRight size={13} style={{ marginLeft: '4px' }} />
+                        {isCurrent ? 'Current' : 'Enter Portal'}
+                        <ArrowRight size={12} />
                       </button>
                     </div>
                   </div>
@@ -327,23 +312,15 @@ export default function LoginPortal({ isOpen, onClose, onLoginSuccess, currentRo
               })}
             </div>
           ) : (
-            <form onSubmit={handleCustomLogin} style={{ maxWidth: '420px', margin: '0 auto' }}>
-              <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '6px' }}>
+            <form onSubmit={handleCustomLogin} style={{ maxWidth: '400px', margin: '0 auto' }}>
+              <div className="form-group">
+                <label className="form-label">
                   Target Role Portal
                 </label>
                 <select
                   value={selectedRole}
                   onChange={(e) => setSelectedRole(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '10px 14px',
-                    borderRadius: '8px',
-                    border: '1px solid var(--border-color)',
-                    background: 'var(--surface-color)',
-                    color: 'var(--text-primary)',
-                    fontSize: '13.5px'
-                  }}
+                  className="form-select"
                 >
                   <option value="student">Student Portal (Candidate)</option>
                   <option value="teacher">Teacher / IELTS Examiner Portal</option>
@@ -352,8 +329,8 @@ export default function LoginPortal({ isOpen, onClose, onLoginSuccess, currentRo
                 </select>
               </div>
 
-              <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '6px' }}>
+              <div className="form-group">
+                <label className="form-label">
                   Email Address
                 </label>
                 <input 
@@ -361,21 +338,13 @@ export default function LoginPortal({ isOpen, onClose, onLoginSuccess, currentRo
                   value={customEmail}
                   onChange={(e) => setCustomEmail(e.target.value)}
                   placeholder="e.g. nafis.ahmed@edumax.io"
-                  style={{
-                    width: '100%',
-                    padding: '10px 14px',
-                    borderRadius: '8px',
-                    border: '1px solid var(--border-color)',
-                    background: 'var(--surface-color)',
-                    color: 'var(--text-primary)',
-                    fontSize: '13.5px'
-                  }}
+                  className="form-input"
                   required
                 />
               </div>
 
-              <div style={{ marginBottom: '24px' }}>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)', marginBottom: '6px' }}>
+              <div className="form-group">
+                <label className="form-label">
                   Password
                 </label>
                 <input 
@@ -383,46 +352,38 @@ export default function LoginPortal({ isOpen, onClose, onLoginSuccess, currentRo
                   value={customPassword}
                   onChange={(e) => setCustomPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  style={{
-                    width: '100%',
-                    padding: '10px 14px',
-                    borderRadius: '8px',
-                    border: '1px solid var(--border-color)',
-                    background: 'var(--surface-color)',
-                    color: 'var(--text-primary)',
-                    fontSize: '13.5px'
-                  }}
+                  className="form-input"
                 />
               </div>
 
               <button 
                 type="submit" 
                 className="btn btn-primary"
-                style={{ width: '100%', padding: '12px', fontSize: '14px', justifyContent: 'center' }}
+                style={{ width: '100%', marginTop: '8px' }}
                 disabled={loading}
               >
                 {loading ? 'Authenticating...' : 'Sign In with Role Clearance'}
-                <ArrowRight size={16} />
+                <ArrowRight size={14} />
               </button>
             </form>
           )}
 
-          {/* Concurrency & Scalability Note */}
+          {/* Minimal Concurrency & Scalability Footer */}
           <div style={{
-            marginTop: '24px',
-            background: 'var(--surface-color-subtle)',
-            borderRadius: '10px',
-            padding: '14px 18px',
+            marginTop: '20px',
+            background: 'var(--bg-subtle)',
+            borderRadius: 'var(--radius-md)',
+            padding: '12px 14px',
             display: 'flex',
             alignItems: 'center',
-            gap: '12px',
-            fontSize: '12px',
+            gap: '10px',
+            fontSize: '11.5px',
             color: 'var(--text-secondary)',
             border: '1px solid var(--border-color)'
           }}>
-            <Zap size={16} color="var(--primary-red)" style={{ flexShrink: 0 }} />
+            <Zap size={14} color="var(--primary-red)" style={{ flexShrink: 0 }} />
             <div>
-              <strong style={{ color: 'var(--text-primary)' }}>High-Concurrency SaaS Architecture:</strong> All sessions are token-authenticated with sub-millisecond RBAC validation and atomic mutex locking on shared resources.
+              <strong style={{ color: 'var(--text-primary)' }}>Role Segregation:</strong> Sessions are token-authenticated with sub-millisecond RBAC validation and atomic mutex locking.
             </div>
           </div>
 

@@ -3,18 +3,13 @@ import {
   Search, 
   Bell, 
   ChevronDown, 
-  Check, 
-  Sparkles,
-  User,
+  Menu, 
+  LogOut, 
+  ArrowRightLeft,
   GraduationCap,
   Award,
   Building,
-  ShieldAlert,
-  Menu,
-  LogOut,
-  Zap,
-  Lock,
-  ArrowRightLeft
+  ShieldAlert
 } from 'lucide-react';
 import { ROLES, CURRENT_USERS } from '../data/mockData';
 
@@ -36,29 +31,25 @@ export default function Navbar({
       label: 'Student Portal',
       badge: 'Target 8.0',
       icon: GraduationCap,
-      color: '#3b82f6',
-      portalTag: 'CANDIDATE VIEW'
+      portalTag: 'STUDENT PORTAL'
     },
     [ROLES.TEACHER]: {
       label: 'Teacher / Examiner',
-      badge: 'Senior Evaluator',
+      badge: 'Examiner',
       icon: Award,
-      color: '#8b5cf6',
-      portalTag: 'EXAMINER VIEW'
+      portalTag: 'EXAMINER PORTAL'
     },
     [ROLES.MANAGER]: {
       label: 'Institute Manager',
       badge: '5 Branches',
       icon: Building,
-      color: '#C81E2E',
-      portalTag: 'OPERATIONS VIEW'
+      portalTag: 'MANAGER PORTAL'
     },
     [ROLES.PLATFORM_ADMIN]: {
-      label: 'Platform SaaS Admin',
-      badge: 'Super Admin',
+      label: 'Platform Admin',
+      badge: 'Admin',
       icon: ShieldAlert,
-      color: '#10b981',
-      portalTag: 'SUPER ADMIN VIEW'
+      portalTag: 'PLATFORM ADMIN'
     }
   };
 
@@ -67,77 +58,76 @@ export default function Navbar({
 
   return (
     <header className="top-navbar">
-      {/* Left: Breadcrumbs & Search */}
+      {/* Left: Menu Toggle & Navigation Breadcrumb */}
       <div className="nav-left-section">
         <button 
           className="mobile-menu-btn" 
           onClick={onToggleMobileMenu}
           aria-label="Open Navigation Menu"
         >
-          <Menu size={20} />
+          <Menu size={18} />
         </button>
 
-        {/* Dynamic RBAC Breadcrumbs */}
+        {/* Minimal Monochromatic Breadcrumbs */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '5px',
-            background: `${currentMeta.color}15`,
-            color: currentMeta.color,
+            gap: '6px',
+            background: 'var(--bg-subtle)',
+            color: 'var(--brand-dark)',
+            border: '1px solid var(--border-color)',
             padding: '3px 8px',
-            borderRadius: '6px',
+            borderRadius: 'var(--radius-sm)',
             fontSize: '11px',
             fontWeight: '700',
             letterSpacing: '0.4px'
           }}>
-            <RoleIcon size={12} />
+            <RoleIcon size={12} color="var(--primary-red)" />
             {currentMeta.portalTag}
           </div>
-          <span style={{ color: 'var(--border-color)' }}>/</span>
-          <span style={{ fontSize: '13.5px', fontWeight: '600', color: 'var(--text-primary)' }}>
+          <span style={{ color: 'var(--border-color)', fontSize: '13px' }}>/</span>
+          <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>
             {activeScreen.replace(/([A-Z])/g, ' $1').replace(/-/g, ' ').trim()}
           </span>
         </div>
 
-        {/* Global Search Bar (Only searches current role views) */}
+        {/* Clean Search Bar */}
         <div className="global-search-bar" onClick={onOpenSearch}>
-          <Search size={16} color="var(--text-muted)" />
+          <Search size={15} color="var(--text-muted)" />
           <input 
             type="text" 
-            placeholder={`Search ${currentMeta.label.toLowerCase()} actions & screens...`} 
+            placeholder={`Search ${currentMeta.label.toLowerCase()}...`} 
             readOnly 
           />
           <span className="search-shortcut-pill">⌘K</span>
         </div>
       </div>
 
-      {/* Right: Telemetry, Notifications & User Account */}
+      {/* Right: Telemetry, Switch Portal, Notifications, User */}
       <div className="nav-right-section">
 
-        {/* SaaS High-Concurrency Telemetry Badge */}
+        {/* Minimal Telemetry Status */}
         <div 
           className="desktop-only"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '6px',
-            background: 'var(--surface-color-subtle)',
+            background: 'var(--bg-subtle)',
             border: '1px solid var(--border-color)',
-            padding: '4px 10px',
-            borderRadius: '999px',
+            padding: '3px 9px',
+            borderRadius: 'var(--radius-full)',
             fontSize: '11px',
             fontWeight: '600',
             color: 'var(--text-secondary)'
           }}
-          title="SaaS Concurrency Protected with FIFO Mutex Locks & Sub-Millisecond Response"
         >
           <span style={{
             width: '6px',
             height: '6px',
             borderRadius: '50%',
-            background: 'var(--accent-green)',
-            boxShadow: '0 0 6px rgba(16, 185, 129, 0.8)'
+            background: 'var(--status-success-text)'
           }} />
           <span>SaaS Mutex Active</span>
         </div>
@@ -145,14 +135,11 @@ export default function Navbar({
         {/* Switch Portal Account Button */}
         <button
           onClick={onOpenLoginModal}
-          className="btn btn-secondary"
+          className="btn btn-secondary btn-sm"
           style={{
-            padding: '6px 12px',
-            fontSize: '12px',
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '6px',
-            borderRadius: '8px'
+            gap: '6px'
           }}
           title="Switch to another segregated role portal"
         >
@@ -167,14 +154,14 @@ export default function Navbar({
             onClick={() => setShowNotifications(!showNotifications)}
             aria-label="View notifications"
           >
-            <Bell size={18} />
+            <Bell size={16} />
             {notificationCount > 0 && <span className="nav-badge-dot" />}
           </button>
 
           {showNotifications && (
             <div className="notification-dropdown">
               <div className="notification-header">
-                <span style={{ fontWeight: '700', fontSize: '13px' }}>Notifications ({notificationCount})</span>
+                <span style={{ fontWeight: '700', fontSize: '12.5px' }}>Notifications ({notificationCount})</span>
                 <span style={{ fontSize: '11px', color: 'var(--primary-red)', cursor: 'pointer', fontWeight: '600' }}>
                   Mark all read
                 </span>
@@ -205,18 +192,17 @@ export default function Navbar({
           <div 
             className="user-profile-summary"
             onClick={() => setShowProfileMenu(!showProfileMenu)}
-            style={{ cursor: 'pointer' }}
           >
-            <div className="user-avatar" style={{ background: currentMeta.color }}>
+            <div className="user-avatar">
               {currentUser.name ? currentUser.name.charAt(0) : 'U'}
             </div>
             <div className="user-info desktop-only">
               <span className="user-name">{currentUser.name}</span>
-              <span className="user-role" style={{ color: currentMeta.color, fontWeight: '700' }}>
+              <span className="user-role">
                 {currentMeta.label}
               </span>
             </div>
-            <ChevronDown size={14} color="var(--text-muted)" className="desktop-only" />
+            <ChevronDown size={13} color="var(--text-muted)" className="desktop-only" />
           </div>
 
           {showProfileMenu && (
@@ -224,30 +210,30 @@ export default function Navbar({
               position: 'absolute',
               top: 'calc(100% + 8px)',
               right: 0,
-              width: '240px',
-              background: 'var(--surface-color)',
+              width: '230px',
+              background: 'var(--bg-card)',
               border: '1px solid var(--border-color)',
-              borderRadius: '12px',
-              boxShadow: '0 12px 32px rgba(0,0,0,0.12)',
-              padding: '12px',
+              borderRadius: 'var(--radius-lg)',
+              boxShadow: 'var(--shadow-dropdown)',
+              padding: '10px',
               zIndex: 1000
             }}>
-              <div style={{ paddingBottom: '10px', borderBottom: '1px solid var(--border-color)', marginBottom: '8px' }}>
-                <div style={{ fontWeight: '700', fontSize: '13.5px', color: 'var(--text-primary)' }}>
+              <div style={{ paddingBottom: '8px', borderBottom: '1px solid var(--border-color)', marginBottom: '6px' }}>
+                <div style={{ fontWeight: '700', fontSize: '13px', color: 'var(--text-primary)' }}>
                   {currentUser.name}
                 </div>
-                <div style={{ fontSize: '11.5px', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <div style={{ fontSize: '11px', color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {currentUser.email || 'user@edumax.io'}
                 </div>
                 <div style={{ 
-                  marginTop: '6px', 
-                  fontSize: '11px', 
-                  background: `${currentMeta.color}15`, 
-                  color: currentMeta.color,
+                  marginTop: '5px', 
+                  fontSize: '10.5px', 
+                  background: 'var(--bg-subtle)', 
+                  color: 'var(--text-secondary)',
                   display: 'inline-block',
-                  padding: '2px 8px',
+                  padding: '1px 6px',
                   borderRadius: '4px',
-                  fontWeight: '700'
+                  fontWeight: '600'
                 }}>
                   {currentMeta.badge}
                 </div>
@@ -263,20 +249,20 @@ export default function Navbar({
                   background: 'none',
                   border: 'none',
                   textAlign: 'left',
-                  padding: '8px 10px',
-                  borderRadius: '6px',
-                  fontSize: '12.5px',
+                  padding: '7px 8px',
+                  borderRadius: 'var(--radius-sm)',
+                  fontSize: '12px',
                   fontWeight: '600',
                   color: 'var(--text-primary)',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
+                  gap: '7px',
                   cursor: 'pointer'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'var(--surface-color-subtle)'}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'var(--bg-subtle)'}
                 onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
               >
-                <ArrowRightLeft size={14} color="var(--primary-red)" />
+                <ArrowRightLeft size={13} color="var(--primary-red)" />
                 Switch Role Account
               </button>
 
@@ -290,20 +276,20 @@ export default function Navbar({
                   background: 'none',
                   border: 'none',
                   textAlign: 'left',
-                  padding: '8px 10px',
-                  borderRadius: '6px',
-                  fontSize: '12.5px',
+                  padding: '7px 8px',
+                  borderRadius: 'var(--radius-sm)',
+                  fontSize: '12px',
                   fontWeight: '600',
                   color: 'var(--primary-red)',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
+                  gap: '7px',
                   cursor: 'pointer'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(220, 38, 38, 0.08)'}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'var(--primary-red-subtle)'}
                 onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
               >
-                <LogOut size={14} />
+                <LogOut size={13} />
                 Sign Out
               </button>
             </div>

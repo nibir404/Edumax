@@ -217,18 +217,17 @@ export default function Sidebar({ currentRole, activeScreen, setActiveScreen, is
         ))}
       </div>
 
-      {/* Sidebar Footer with Quick Institute Info */}
+      {/* Sidebar Footer with Minimal System Info */}
       <div className="sidebar-footer">
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <div style={{ 
-            width: '8px', 
-            height: '8px', 
+            width: '6px', 
+            height: '6px', 
             borderRadius: '50%', 
-            background: 'var(--accent-green)',
-            boxShadow: '0 0 6px rgba(16, 185, 129, 0.6)' 
+            background: 'var(--status-success-text)'
           }} />
-          <span style={{ fontSize: '11.5px', fontWeight: '600', color: 'var(--text-secondary)' }}>
-            Edumax Cloud v3.8 • Live
+          <span style={{ fontSize: '11px', fontWeight: '500', color: 'var(--text-muted)' }}>
+            Edumax Cloud • Live
           </span>
         </div>
       </div>

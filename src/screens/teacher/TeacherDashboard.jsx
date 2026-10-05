@@ -9,8 +9,7 @@ import {
   ChevronRight, 
   CheckCircle2, 
   Calendar,
-  AlertCircle,
-  FileCheck
+  AlertCircle
 } from 'lucide-react';
 import { CURRENT_USERS, TEACHER_BATCHES } from '../../data/mockData';
 
@@ -25,32 +24,32 @@ export default function TeacherDashboard({ onNavigate }) {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
       
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: '800' }}>
-            Examiner Console • Welcome, {teacher.name}
+          <h1 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--text-primary)', letterSpacing: '-0.3px' }}>
+            Examiner Console
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '13.5px' }}>
-            {teacher.role} • {teacher.branch} • <strong>{teacher.pendingEvaluations}</strong> Submissions awaiting grading
+          <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '2px' }}>
+            {teacher.name} • {teacher.branch} • <strong>{teacher.pendingEvaluations}</strong> Submissions awaiting grading
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '10px' }}>
-          <button className="btn btn-primary" onClick={() => onNavigate('speaking-interview')}>
-            <Mic size={15} />
-            <span>Launch Live Speaking Exam Console</span>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button className="btn btn-primary btn-sm" onClick={() => onNavigate('speaking-interview')}>
+            <Mic size={14} />
+            <span>Launch Speaking Console</span>
           </button>
-          <button className="btn btn-secondary" onClick={() => onNavigate('assign-test')}>
-            <Send size={15} />
-            <span>Assign Test to Batch</span>
+          <button className="btn btn-secondary btn-sm" onClick={() => onNavigate('assign-test')}>
+            <Send size={14} />
+            <span>Assign Test Paper</span>
           </button>
         </div>
       </div>
 
-      {/* Top 4 Stat Widgets (Lurni & Panacea Style) */}
+      {/* Top 4 Stat Widgets - Unified Design Tokens */}
       <div className="stats-grid">
         <div className="edu-card stat-card">
           <div className="stat-info">
@@ -58,19 +57,19 @@ export default function TeacherDashboard({ onNavigate }) {
             <span className="stat-value">{teacher.assignedBatches}</span>
             <span className="stat-trend up">85 Total Students</span>
           </div>
-          <div className="stat-icon-box" style={{ background: 'var(--accent-blue-light)', color: 'var(--accent-blue)' }}>
-            <Users size={22} />
+          <div className="stat-icon-box">
+            <Users size={20} />
           </div>
         </div>
 
         <div className="edu-card stat-card">
           <div className="stat-info">
-            <span className="stat-label">Pending Essay Evaluations</span>
+            <span className="stat-label">Pending Essay Reviews</span>
             <span className="stat-value">{teacher.pendingEvaluations}</span>
-            <span className="stat-trend down" style={{ color: '#D97706' }}>3 Due Today</span>
+            <span className="stat-trend" style={{ color: 'var(--status-warning-text)' }}>3 Due Today</span>
           </div>
-          <div className="stat-icon-box" style={{ background: '#FEF3C7', color: '#B45309' }}>
-            <PenTool size={22} />
+          <div className="stat-icon-box">
+            <PenTool size={20} />
           </div>
         </div>
 
@@ -80,8 +79,8 @@ export default function TeacherDashboard({ onNavigate }) {
             <span className="stat-value">{teacher.todayInterviews}</span>
             <span className="stat-trend up">1 Completed</span>
           </div>
-          <div className="stat-icon-box" style={{ background: 'var(--accent-purple-light)', color: 'var(--accent-purple)' }}>
-            <Mic size={22} />
+          <div className="stat-icon-box">
+            <Mic size={20} />
           </div>
         </div>
 
@@ -91,44 +90,47 @@ export default function TeacherDashboard({ onNavigate }) {
             <span className="stat-value">7.2</span>
             <span className="stat-trend up">+0.4 This Month</span>
           </div>
-          <div className="stat-icon-box" style={{ background: 'var(--accent-green-light)', color: 'var(--accent-green)' }}>
-            <Award size={22} />
+          <div className="stat-icon-box">
+            <Award size={20} />
           </div>
         </div>
       </div>
 
       {/* Main Grid: Batches Progress + Today's Schedule */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: '20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: '18px' }}>
         
         {/* Batches Overview Card */}
-        <div className="edu-card" style={{ padding: '24px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+        <div className="edu-card" style={{ padding: '22px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
             <div>
-              <h3 style={{ fontSize: '16px', fontWeight: '700' }}>Active Cohorts Overview</h3>
-              <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Progress and mock readiness across your assigned classes</p>
+              <h3 style={{ fontSize: '14.5px', fontWeight: '700', color: 'var(--text-primary)' }}>Active Cohorts Overview</h3>
+              <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Progress and mock readiness across assigned classes</p>
             </div>
             <button className="btn btn-secondary btn-sm" onClick={() => onNavigate('my-batches')}>
               View All Batches
             </button>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {TEACHER_BATCHES.map((batch) => (
               <div 
                 key={batch.id} 
                 style={{ 
-                  padding: '16px', 
-                  borderRadius: '10px', 
+                  padding: '14px 16px', 
+                  borderRadius: 'var(--radius-md)', 
                   border: '1px solid var(--border-color)', 
-                  background: '#F8FAFC',
-                  cursor: 'pointer'
+                  background: 'var(--bg-subtle)',
+                  cursor: 'pointer',
+                  transition: 'border-color 0.12s ease'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--border-hover)'}
+                onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--border-color)'}
                 onClick={() => onNavigate('batch-detail')}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div>
-                    <div style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)' }}>{batch.name}</div>
-                    <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '2px' }}>
+                    <div style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--text-primary)' }}>{batch.name}</div>
+                    <div style={{ fontSize: '11.5px', color: 'var(--text-muted)', marginTop: '2px' }}>
                       {batch.studentsCount} Students • {batch.schedule} • Room: {batch.room}
                     </div>
                   </div>
@@ -137,12 +139,12 @@ export default function TeacherDashboard({ onNavigate }) {
                   </div>
                 </div>
 
-                <div style={{ marginTop: '12px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', marginBottom: '4px', color: 'var(--text-secondary)' }}>
+                <div style={{ marginTop: '10px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '4px', color: 'var(--text-secondary)' }}>
                     <span>Syllabus Completion</span>
                     <strong>{batch.progress}%</strong>
                   </div>
-                  <div style={{ height: '6px', background: '#E2E8F0', borderRadius: '3px', overflow: 'hidden' }}>
+                  <div style={{ height: '4px', background: 'var(--border-color)', borderRadius: '2px', overflow: 'hidden' }}>
                     <div style={{ width: `${batch.progress}%`, height: '100%', background: 'var(--primary-red)' }} />
                   </div>
                 </div>
@@ -151,21 +153,21 @@ export default function TeacherDashboard({ onNavigate }) {
           </div>
         </div>
 
-        {/* Today's Speaking Schedule (Panacea Appointment Style) */}
-        <div className="edu-card" style={{ padding: '24px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
-            <h3 style={{ fontSize: '16px', fontWeight: '700' }}>Today's Speaking Schedule</h3>
-            <span className="badge badge-purple">4 Scheduled</span>
+        {/* Today's Speaking Schedule */}
+        <div className="edu-card" style={{ padding: '22px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <h3 style={{ fontSize: '14.5px', fontWeight: '700', color: 'var(--text-primary)' }}>Today's Speaking Schedule</h3>
+            <span className="badge">4 Scheduled</span>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {todayInterviews.map((item, idx) => (
               <div 
                 key={idx} 
                 style={{ 
-                  padding: '12px 14px', 
-                  borderRadius: '10px', 
-                  background: item.status === 'Completed' ? '#F1F5F9' : '#FFFFFF',
+                  padding: '11px 13px', 
+                  borderRadius: 'var(--radius-md)', 
+                  background: item.status === 'Completed' ? 'var(--bg-subtle)' : 'var(--bg-card)',
                   border: '1px solid var(--border-color)',
                   display: 'flex',
                   alignItems: 'center',
@@ -173,25 +175,25 @@ export default function TeacherDashboard({ onNavigate }) {
                 }}
               >
                 <div>
-                  <div style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--text-primary)' }}>
+                  <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-primary)' }}>
                     {item.student}
                   </div>
                   <div style={{ fontSize: '11.5px', color: 'var(--text-muted)' }}>
-                    ⏱ {item.time} • {item.room}
+                    {item.time} • {item.room}
                   </div>
                 </div>
 
                 <div>
                   {item.status === 'Completed' ? (
-                    <span className="badge badge-green">
-                      <CheckCircle2 size={12} /> Done
+                    <span className="badge badge-success">
+                      <CheckCircle2 size={11} /> Done
                     </span>
                   ) : (
                     <button 
                       className="btn btn-primary btn-sm"
                       onClick={() => onNavigate('speaking-interview')}
                     >
-                      <Mic size={12} /> Start
+                      <Mic size={11} /> Start
                     </button>
                   )}
                 </div>
