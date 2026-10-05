@@ -96,8 +96,8 @@ export default function TeacherDashboard({ onNavigate }) {
         </div>
       </div>
 
-      {/* Main Grid: Batches Progress + Today's Schedule */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: '18px' }}>
+      {/* Main Grid: Batches Progress + Today's Schedule (Responsive) */}
+      <div className="teacher-main-grid">
         
         {/* Batches Overview Card */}
         <div className="edu-card" style={{ padding: '22px' }}>

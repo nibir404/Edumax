@@ -75,20 +75,20 @@ export default function ExamTakingSession({ testId = 'TEST-AC-01', onCancel, onE
             <ArrowLeft size={14} /> Exit Test
           </button>
           <div>
-            <div style={{ fontSize: '11px', color: '#38BDF8', fontWeight: '700', textTransform: 'uppercase' }}>
+            <div style={{ fontSize: '10.5px', color: 'rgba(255,255,255,0.7)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               OFFICIAL IELTS SIMULATION RUNNER
             </div>
-            <div style={{ fontSize: '15px', fontWeight: '800' }}>
+            <div style={{ fontSize: '14.5px', fontWeight: '700', color: '#FFFFFF' }}>
               Cambridge IELTS 19 • Academic Reading & Writing Section
             </div>
           </div>
         </div>
 
         {/* Stopwatch & Submit */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.08)', padding: '6px 16px', borderRadius: '8px' }}>
-            <Clock size={16} color="#38BDF8" />
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '20px', fontWeight: '800', color: secondsLeft < 300 ? '#EF4444' : '#FFF' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.08)', padding: '6px 14px', borderRadius: 'var(--radius-sm)' }}>
+            <Clock size={15} color="#FFFFFF" />
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '18px', fontWeight: '700', color: secondsLeft < 300 ? 'var(--primary-red)' : '#FFFFFF' }}>
               {formatTime(secondsLeft)}
             </span>
           </div>
@@ -97,13 +97,13 @@ export default function ExamTakingSession({ testId = 'TEST-AC-01', onCancel, onE
             className="btn btn-primary"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            style={{ padding: '8px 20px', fontWeight: '700' }}
+            style={{ padding: '8px 18px', fontWeight: '600' }}
           >
             {isSubmitting ? (
               <span>AI Auto-Grading...</span>
             ) : (
               <>
-                <Send size={15} />
+                <Send size={14} />
                 <span>Submit Exam Paper</span>
               </>
             )}
@@ -111,8 +111,8 @@ export default function ExamTakingSession({ testId = 'TEST-AC-01', onCancel, onE
         </div>
       </div>
 
-      {/* Split Workspace */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '20px' }}>
+      {/* Split Workspace (Responsive) */}
+      <div className="exam-workspace-split">
         
         {/* Left: Reading Passage */}
         <div className="edu-card" style={{ padding: '24px', height: 'calc(100vh - 180px)', overflowY: 'auto' }}>

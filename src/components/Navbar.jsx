@@ -69,7 +69,7 @@ export default function Navbar({
         </button>
 
         {/* Minimal Monochromatic Breadcrumbs */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div className="nav-breadcrumbs">
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -81,7 +81,8 @@ export default function Navbar({
             borderRadius: 'var(--radius-sm)',
             fontSize: '11px',
             fontWeight: '700',
-            letterSpacing: '0.4px'
+            letterSpacing: '0.4px',
+            flexShrink: 0
           }}>
             <RoleIcon size={12} color="var(--primary-red)" />
             {currentMeta.portalTag}
@@ -144,7 +145,7 @@ export default function Navbar({
           title="Switch to another segregated role portal"
         >
           <ArrowRightLeft size={13} color="var(--primary-red)" />
-          <span>Switch Portal</span>
+          <span className="desktop-sm-visible">Switch Portal</span>
         </button>
 
         {/* Notifications Icon Button */}

@@ -1,30 +1,37 @@
-/* Edumax Consultancy - Minimal Experience-Oriented Design System */
+/* ==========================================================================
+   EDUMAX CONSULTANCY — PRODUCTION DESIGN SYSTEM
+   60 / 30 / 10 Minimal Architecture • Ergonomic Breathing • Universal Responsive
+   ========================================================================== */
 
 :root {
-  /* Brand Identity - Official Edumax Colors */
-  --primary-red: #C81E2E;
-  --primary-red-hover: #B01726;
-  --primary-red-subtle: #FDF2F2;
-  --primary-red-border: rgba(200, 30, 46, 0.2);
-  
-  --brand-dark: #1E242D;
-  --brand-dark-hover: #151920;
-  --brand-dark-subtle: #2A313D;
-
-  /* Surfaces & Backgrounds - Serene & Monochromatic */
+  /* ------------------------------------------------------------------------
+     60% DOMINANT NEUTRALS (Canvas, Surfaces & Card Foundation)
+     Clean, serene, glare-free light space providing maximum clarity
+     ------------------------------------------------------------------------ */
   --bg-app: #F8FAFC;
   --bg-card: #FFFFFF;
   --bg-subtle: #F1F5F9;
   --bg-hover: #F8FAFC;
   --bg-card-subtle: #FAFAFA;
 
-  /* High-legibility Slate Typography */
+  /* ------------------------------------------------------------------------
+     30% STRUCTURAL NEUTRALS (Typography, Hairlines & Architecture)
+     Deep slate, structural dividers, and secondary actions
+     ------------------------------------------------------------------------ */
   --text-primary: #0F172A;
-  --text-secondary: #475569;
-  --text-muted: #94A3B8;
+  --text-secondary: #334155;
+  --text-muted: #64748B;
+  --text-subtle: #94A3B8;
   --text-white: #FFFFFF;
 
-  /* Restrained Functional Status (Muted, Never Garish) */
+  --brand-dark: #1E242D;
+  --brand-dark-hover: #151922;
+  --brand-dark-subtle: #2A313D;
+
+  --border-color: #E2E8F0;
+  --border-subtle: #F1F5F9;
+  --border-hover: #CBD5E1;
+
   --status-success-bg: #F0FDF4;
   --status-success-text: #166534;
   --status-success-border: #DCFCE7;
@@ -33,51 +40,78 @@
   --status-warning-text: #92400E;
   --status-warning-border: #FEF3C7;
 
-  --status-info-bg: #F8FAFC;
-  --status-info-text: #334155;
-  --status-info-border: #E2E8F0;
+  /* ------------------------------------------------------------------------
+     10% BRAND ACCENT (Edumax Red — High Impact, Deliberate Focus)
+     Strictly reserved for primary actions, active states, and focal metrics
+     ------------------------------------------------------------------------ */
+  --primary-red: #C81E2E;
+  --primary-red-hover: #B01726;
+  --primary-red-active: #96121F;
+  --primary-red-subtle: #FDF2F2;
+  --primary-red-tint: rgba(200, 30, 46, 0.08);
+  --primary-red-border: rgba(200, 30, 46, 0.25);
+  --primary-red-glow: rgba(200, 30, 46, 0.15);
 
-  /* Borders & Clean Shadows */
-  --border-color: #E2E8F0;
-  --border-subtle: #F1F5F9;
-  --border-hover: #CBD5E1;
-  --border-active: var(--primary-red);
-  
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
-  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.03), 0 1px 2px -1px rgba(0, 0, 0, 0.02);
-  --shadow-hover: 0 4px 12px -2px rgba(15, 23, 42, 0.05), 0 2px 4px -1px rgba(15, 23, 42, 0.02);
-  --shadow-dropdown: 0 12px 28px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.03);
-  
-  /* Radii - Consistent & Modern */
+  /* ------------------------------------------------------------------------
+     BREATHING & SPACING SCALE
+     ------------------------------------------------------------------------ */
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 20px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+  --space-3xl: 40px;
+  --space-4xl: 48px;
+
+  /* ------------------------------------------------------------------------
+     UNIFIED RADII & CLEAN ELEVATION
+     ------------------------------------------------------------------------ */
+  --radius-xs: 4px;
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
   --radius-full: 9999px;
 
+  --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+  --shadow-card: 0 1px 3px 0 rgba(15, 23, 42, 0.03), 0 1px 2px -1px rgba(15, 23, 42, 0.02);
+  --shadow-hover: 0 4px 14px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -1px rgba(15, 23, 42, 0.02);
+  --shadow-dropdown: 0 12px 28px -4px rgba(15, 23, 42, 0.09), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
+
   /* Typography */
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-display: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-* {
+/* Base Reset & Smooth Typography */
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+html {
+  font-size: 14px;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   font-family: var(--font-sans);
   background-color: var(--bg-app);
   color: var(--text-primary);
-  line-height: 1.5;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   overflow-x: hidden;
+  min-height: 100vh;
 }
 
-/* Ambient glow removed for pure, minimal aesthetic */
+/* Ambient glow removed for minimal calm aesthetic */
 .ambient-glow {
   display: none !important;
 }
@@ -88,6 +122,7 @@ body {
   min-height: 100vh;
   width: 100%;
   background: var(--bg-app);
+  position: relative;
 }
 
 .main-wrapper {
@@ -97,20 +132,21 @@ body {
   min-width: 0;
   overflow-y: auto;
   height: 100vh;
+  -webkit-overflow-scrolling: touch;
 }
 
 .content-area {
   flex: 1;
-  padding: 32px 40px 64px;
-  max-width: 1540px;
+  padding: clamp(20px, 2.8vw, 36px) clamp(16px, 3.5vw, 44px) 64px;
+  max-width: 1560px;
   width: 100%;
   margin: 0 auto;
 }
 
 /* Custom Minimal Scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
@@ -123,19 +159,20 @@ body {
   background: #CBD5E1;
 }
 
-/* Minimal Card Component */
+/* --------------------------------------------------------------------------
+   CARDS & SURFACES (60% Foundation)
+   -------------------------------------------------------------------------- */
 .edu-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
-  transition: all 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
   overflow: hidden;
 }
 
 .edu-card:hover {
   border-color: var(--border-hover);
-  box-shadow: var(--shadow-hover);
 }
 
 .edu-card-interactive {
@@ -143,16 +180,20 @@ body {
 }
 .edu-card-interactive:hover {
   border-color: var(--border-hover);
+  box-shadow: var(--shadow-hover);
   transform: translateY(-1px);
 }
 
-/* Minimal Button System */
+/* --------------------------------------------------------------------------
+   BUTTON SYSTEM (10% Brand Accent & 30% Structural Dark)
+   -------------------------------------------------------------------------- */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 7px;
   padding: 8px 16px;
+  min-height: 38px;
   font-family: var(--font-sans);
   font-size: 13px;
   font-weight: 600;
@@ -162,6 +203,8 @@ body {
   transition: all 0.12s ease-in-out;
   text-decoration: none;
   white-space: nowrap;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn-primary {
@@ -172,6 +215,9 @@ body {
 .btn-primary:hover {
   background-color: var(--primary-red-hover);
   border-color: var(--primary-red-hover);
+}
+.btn-primary:active {
+  background-color: var(--primary-red-active);
 }
 
 .btn-secondary {
@@ -214,17 +260,21 @@ body {
 
 .btn-sm {
   padding: 5px 12px;
+  min-height: 32px;
   font-size: 12px;
   border-radius: var(--radius-sm);
 }
 
 .btn-lg {
-  padding: 11px 22px;
-  font-size: 14.5px;
+  padding: 12px 22px;
+  min-height: 44px;
+  font-size: 14px;
   border-radius: var(--radius-md);
 }
 
-/* Minimal Badges & Status Pills */
+/* --------------------------------------------------------------------------
+   BADGES & PILLS
+   -------------------------------------------------------------------------- */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -263,16 +313,18 @@ body {
   border: 1px solid var(--status-warning-border);
 }
 
-.badge-blue, .badge-purple, .badge-slate {
+.badge-slate {
   background: var(--bg-subtle);
   color: var(--text-secondary);
   border: 1px solid var(--border-color);
 }
 
-/* Stat Cards */
+/* --------------------------------------------------------------------------
+   STATS GRID (Ergonomic Breathing)
+   -------------------------------------------------------------------------- */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   gap: 16px;
   margin-bottom: 24px;
 }
@@ -292,7 +344,7 @@ body {
 .stat-label {
   font-size: 12.5px;
   font-weight: 500;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   margin-bottom: 4px;
 }
 
@@ -340,7 +392,9 @@ body {
   border-color: var(--primary-red-border);
 }
 
-/* Clean Minimal Data Table */
+/* --------------------------------------------------------------------------
+   DATA TABLES (Touch-friendly Horizontal Scrolling)
+   -------------------------------------------------------------------------- */
 .data-table-container {
   width: 100%;
   overflow-x: auto;
@@ -348,10 +402,12 @@ body {
   border: 1px solid var(--border-color);
   background: var(--bg-card);
   box-shadow: var(--shadow-card);
+  -webkit-overflow-scrolling: touch;
 }
 
 .data-table {
   width: 100%;
+  min-width: 620px;
   border-collapse: collapse;
   text-align: left;
   font-size: 13px;
@@ -359,7 +415,7 @@ body {
 
 .data-table th {
   background-color: var(--bg-subtle);
-  padding: 12px 18px;
+  padding: 13px 18px;
   font-weight: 600;
   color: var(--text-secondary);
   border-bottom: 1px solid var(--border-color);
@@ -383,12 +439,14 @@ body {
   background-color: var(--bg-hover);
 }
 
-/* Form Controls */
+/* --------------------------------------------------------------------------
+   FORM CONTROLS
+   -------------------------------------------------------------------------- */
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
 .form-label {
@@ -400,35 +458,36 @@ body {
 .form-input, .form-select, .form-textarea {
   width: 100%;
   padding: 9px 13px;
+  min-height: 38px;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   font-family: var(--font-sans);
   font-size: 13.5px;
   color: var(--text-primary);
   background-color: var(--bg-card);
-  transition: all 0.15s ease;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
   outline: none;
 }
 
 .form-input:focus, .form-select:focus, .form-textarea:focus {
-  border-color: var(--border-active);
-  box-shadow: 0 0 0 3px rgba(200, 30, 46, 0.08);
+  border-color: var(--primary-red);
+  box-shadow: 0 0 0 3px var(--primary-red-tint);
 }
 
-/* Modals & Dialogs */
+/* --------------------------------------------------------------------------
+   MODALS & OVERLAYS
+   -------------------------------------------------------------------------- */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background-color: rgba(15, 23, 42, 0.45);
   backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 20px;
+  padding: 16px;
 }
 
 .modal-content {
@@ -438,16 +497,17 @@ body {
   box-shadow: var(--shadow-dropdown);
   width: 100%;
   max-width: 680px;
-  max-height: 90vh;
+  max-height: 88vh;
   overflow-y: auto;
   padding: 28px;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Band Gauge & Circular Progress */
+/* Band Gauge Wrapper */
 .band-gauge-wrapper {
   position: relative;
-  width: 170px;
-  height: 170px;
+  width: 160px;
+  height: 160px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -475,15 +535,42 @@ body {
   font-weight: 600;
 }
 
-/* Responsive Breakpoints */
-@media (max-width: 1024px) {
+/* --------------------------------------------------------------------------
+   UNIVERSAL RESPONSIVE BREAKPOINTS (Chrome, Safari, Firefox, Edge, Mobile)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1200px) {
   .content-area {
-    padding: 20px;
+    padding: 24px 28px 48px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .desktop-only {
+    display: none !important;
+  }
+  .content-area {
+    padding: 20px 20px 48px;
   }
 }
 
 @media (max-width: 768px) {
-  .desktop-only {
-    display: none !important;
+  html {
+    font-size: 13.5px;
+  }
+  .content-area {
+    padding: 16px 14px 40px;
+  }
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .btn {
+    min-height: 40px; /* Ergonomic touch target on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
   }
 }

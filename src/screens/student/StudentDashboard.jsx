@@ -151,8 +151,8 @@ export default function StudentDashboard({ onNavigate }) {
         </div>
       </div>
 
-      {/* Main Grid: Band Gauge + Progression Chart + Urgent Actions */}
-      <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr 320px', gap: '18px' }}>
+      {/* Main Grid: Band Gauge + Progression Chart + Urgent Actions (Responsive) */}
+      <div className="dashboard-analytics-grid">
         
         {/* Overall Band Gauge Card */}
         <div className="edu-card" style={{ padding: '22px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>

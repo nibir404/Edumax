@@ -1,6 +1,8 @@
 /* Layout & Component Specific Styles for Edumax - Minimal Experience-Oriented System */
 
-/* Top Navbar */
+/* --------------------------------------------------------------------------
+   TOP NAVBAR (Ergonomic, Touch-friendly & Fluid)
+   -------------------------------------------------------------------------- */
 .top-navbar {
   height: 62px;
   background: var(--bg-card);
@@ -8,16 +10,27 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 32px;
+  padding: 0 clamp(16px, 3vw, 36px);
   position: sticky;
   top: 0;
   z-index: 50;
+  gap: 16px;
 }
 
 .nav-left-section {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 16px;
+  min-width: 0;
+}
+
+.nav-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .global-search-bar {
@@ -27,7 +40,7 @@
   background: var(--bg-subtle);
   border-radius: var(--radius-md);
   padding: 7px 14px;
-  width: 300px;
+  width: 280px;
   border: 1px solid var(--border-color);
   transition: all 0.15s ease;
   cursor: pointer;
@@ -62,7 +75,8 @@
 .nav-right-section {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
 .nav-action-icon-btn {
@@ -78,6 +92,7 @@
   cursor: pointer;
   position: relative;
   transition: all 0.12s ease;
+  user-select: none;
 }
 
 .nav-action-icon-btn:hover {
@@ -108,6 +123,7 @@
   background: var(--bg-card);
   cursor: pointer;
   transition: all 0.12s ease;
+  user-select: none;
 }
 
 .user-profile-summary:hover {
@@ -172,6 +188,7 @@
 .notification-list {
   max-height: 320px;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .notification-item {
@@ -208,7 +225,9 @@
   color: var(--text-muted);
 }
 
-/* Left Sidebar - Minimal & Refined */
+/* --------------------------------------------------------------------------
+   LEFT SIDEBAR (Ergonomic Structure & Visual Focus)
+   -------------------------------------------------------------------------- */
 .sidebar {
   width: 256px;
   background: var(--bg-card);
@@ -238,6 +257,7 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .sidebar-group-title {
@@ -263,6 +283,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 8px 10px;
+  min-height: 36px;
   border-radius: var(--radius-md);
   border: none;
   background: transparent;
@@ -279,6 +300,7 @@
   color: var(--text-primary);
 }
 
+/* 10% Accent Focus on Active Sidebar Item */
 .sidebar-item-btn.active {
   background: var(--primary-red-subtle);
   color: var(--primary-red);
@@ -315,11 +337,72 @@
   background: var(--bg-card);
 }
 
-/* Speaking Interview Console */
+/* --------------------------------------------------------------------------
+   RESPONSIVE ANALYTICS & DASHBOARD GRIDS
+   -------------------------------------------------------------------------- */
+.dashboard-analytics-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 320px) minmax(340px, 1fr) minmax(280px, 340px);
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 1280px) {
+  .dashboard-analytics-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .dashboard-analytics-grid > :nth-child(3) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-analytics-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Teacher Dashboard Grid */
+.teacher-main-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .teacher-main-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Exam Workspace Split (Responsive) */
+.exam-workspace-split {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 1024px) {
+  .exam-workspace-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   SPEAKING INTERVIEW CONSOLE
+   -------------------------------------------------------------------------- */
 .speaking-console-container {
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: 1fr minmax(320px, 380px);
   gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .speaking-console-container {
+    grid-template-columns: 1fr;
+  }
 }
 
 .speaking-script-card {
@@ -495,6 +578,7 @@
   gap: 8px;
   overflow-x: auto;
   padding: 12px 0;
+  -webkit-overflow-scrolling: touch;
 }
 
 .funnel-stage {
@@ -526,7 +610,7 @@
   margin-top: 2px;
 }
 
-/* Minimal Toast Notifications */
+/* Toast Notifications */
 .toast-container {
   position: fixed;
   bottom: 24px;
@@ -555,7 +639,9 @@
   to { transform: translateY(0); opacity: 1; }
 }
 
-/* Mobile & Tablet Responsive Layouts */
+/* --------------------------------------------------------------------------
+   MOBILE & TABLET RESPONSIVE DRAWER & CONTROLS
+   -------------------------------------------------------------------------- */
 .mobile-menu-btn {
   display: none;
   background: none;
@@ -564,6 +650,8 @@
   color: var(--text-primary);
   padding: 6px;
   border-radius: var(--radius-sm);
+  min-height: 36px;
+  min-width: 36px;
 }
 
 .sidebar-overlay {
@@ -600,16 +688,9 @@
     bottom: 0;
     background: rgba(15, 23, 42, 0.4);
     backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     z-index: 90;
     animation: fadeIn 0.15s ease-out;
-  }
-
-  .speaking-console-container {
-    grid-template-columns: 1fr;
-  }
-
-  .content-area {
-    padding: 20px 16px 40px;
   }
 
   .global-search-bar {
@@ -619,14 +700,31 @@
 
 @media (max-width: 768px) {
   .top-navbar {
-    padding: 0 16px;
+    padding: 0 14px;
+    height: 56px;
   }
 
   .global-search-bar {
     display: none;
   }
 
-  .stats-grid {
-    grid-template-columns: 1fr 1fr;
+  .nav-breadcrumbs span:last-child {
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .desktop-sm-visible {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-breadcrumbs span:last-child {
+    display: none;
+  }
+  .nav-breadcrumbs span:nth-child(2) {
+    display: none;
   }
 }
