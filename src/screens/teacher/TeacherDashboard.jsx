@@ -9,18 +9,20 @@ import {
   ChevronRight, 
   CheckCircle2, 
   Calendar,
-  AlertCircle
+  ArrowUpRight
 } from 'lucide-react';
 import { CURRENT_USERS, TEACHER_BATCHES } from '../../data/mockData';
+import Sparkline from '../../components/charts/Sparkline';
+import DonutPieChart from '../../components/charts/DonutPieChart';
 
 export default function TeacherDashboard({ onNavigate }) {
   const teacher = CURRENT_USERS.teacher;
 
   const todayInterviews = [
-    { time: '10:00 AM', student: 'Nafis Ahmed', type: 'Part 1, 2, 3 Full Mock', room: 'Lab 302', status: 'Completed' },
+    { time: '10:00 AM', student: 'Nafis Ahmed', type: 'Full Mock Part 1-3', room: 'Lab 302', status: 'Completed' },
     { time: '11:30 AM', student: 'Tasnia Faruque', type: 'Speaking Diagnostic', room: 'Zoom Room 1', status: 'Upcoming' },
     { time: '02:30 PM', student: 'Arif Chowdhury', type: 'Part 2 Cue Card Intensive', room: 'Lab 302', status: 'Upcoming' },
-    { time: '04:00 PM', student: 'Sadia Rahman', type: 'Final Official Simulation', room: 'Lab 304', status: 'Upcoming' }
+    { time: '04:00 PM', student: 'Sadia Rahman', type: 'Official Simulation', room: 'Lab 304', status: 'Upcoming' }
   ];
 
   return (
@@ -29,11 +31,11 @@ export default function TeacherDashboard({ onNavigate }) {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--text-primary)', letterSpacing: '-0.3px' }}>
+          <h1 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--text-primary)', letterSpacing: '-0.3px', margin: 0 }}>
             Examiner Console
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '2px' }}>
-            {teacher.name} • {teacher.branch} • <strong>{teacher.pendingEvaluations}</strong> Submissions awaiting grading
+          <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '3px', margin: 0 }}>
+            {teacher.name} • {teacher.branch} • <strong>{teacher.pendingEvaluations} Submissions</strong> awaiting grading
           </p>
         </div>
 
@@ -49,65 +51,96 @@ export default function TeacherDashboard({ onNavigate }) {
         </div>
       </div>
 
-      {/* Top 4 Stat Widgets - Unified Design Tokens */}
+      {/* Top 4 Stat Widgets with Inline SVG Sparklines */}
       <div className="stats-grid">
-        <div className="edu-card stat-card">
-          <div className="stat-info">
-            <span className="stat-label">Assigned Batches</span>
-            <span className="stat-value">{teacher.assignedBatches}</span>
-            <span className="stat-trend up">85 Total Students</span>
+        
+        <div className="edu-card stat-card" style={{ padding: '20px 22px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(15, 23, 42, 0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Users size={15} color="#0F172A" />
+              </div>
+              <span className="stat-label" style={{ margin: 0 }}>Assigned Cohorts</span>
+            </div>
+            <div style={{ fontSize: '28px', fontWeight: '800', color: 'var(--text-primary)', marginTop: '4px' }}>
+              {teacher.assignedBatches}
+            </div>
+            <div style={{ fontSize: '11.5px', color: 'var(--text-muted)' }}>
+              85 Enrolled Candidates
+            </div>
           </div>
-          <div className="stat-icon-box">
-            <Users size={20} />
-          </div>
+          <Sparkline data={[3, 3, 4, 4, 4]} color="#0F172A" width={74} height={32} />
         </div>
 
-        <div className="edu-card stat-card">
-          <div className="stat-info">
-            <span className="stat-label">Pending Essay Reviews</span>
-            <span className="stat-value">{teacher.pendingEvaluations}</span>
-            <span className="stat-trend" style={{ color: 'var(--status-warning-text)' }}>3 Due Today</span>
+        <div className="edu-card stat-card" style={{ padding: '20px 22px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(200, 30, 46, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <PenTool size={15} color="var(--primary-red)" />
+              </div>
+              <span className="stat-label" style={{ margin: 0 }}>Pending Essays</span>
+            </div>
+            <div style={{ fontSize: '28px', fontWeight: '800', color: 'var(--text-primary)', marginTop: '4px' }}>
+              {teacher.pendingEvaluations}
+            </div>
+            <div style={{ fontSize: '11.5px', color: 'var(--primary-red)', fontWeight: '600' }}>
+              3 Due Today
+            </div>
           </div>
-          <div className="stat-icon-box">
-            <PenTool size={20} />
-          </div>
+          <Sparkline data={[12, 10, 14, 11, 8]} color="var(--primary-red)" width={74} height={32} isPositive={false} />
         </div>
 
-        <div className="edu-card stat-card">
-          <div className="stat-info">
-            <span className="stat-label">Today's Speaking Slots</span>
-            <span className="stat-value">{teacher.todayInterviews}</span>
-            <span className="stat-trend up">1 Completed</span>
+        <div className="edu-card stat-card" style={{ padding: '20px 22px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(16, 185, 129, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Mic size={15} color="#10B981" />
+              </div>
+              <span className="stat-label" style={{ margin: 0 }}>Speaking Slots</span>
+            </div>
+            <div style={{ fontSize: '28px', fontWeight: '800', color: 'var(--text-primary)', marginTop: '4px' }}>
+              {teacher.todayInterviews}
+            </div>
+            <div style={{ fontSize: '11.5px', color: 'var(--status-success-text)', fontWeight: '600' }}>
+              1 Completed Today
+            </div>
           </div>
-          <div className="stat-icon-box">
-            <Mic size={20} />
-          </div>
+          <Sparkline data={[2, 3, 5, 4, 6]} color="#10B981" width={74} height={32} />
         </div>
 
-        <div className="edu-card stat-card">
-          <div className="stat-info">
-            <span className="stat-label">Average Cohort Band</span>
-            <span className="stat-value">7.2</span>
-            <span className="stat-trend up">+0.4 This Month</span>
+        <div className="edu-card stat-card" style={{ padding: '20px 22px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(200, 30, 46, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Award size={15} color="var(--primary-red)" />
+              </div>
+              <span className="stat-label" style={{ margin: 0 }}>Average Band</span>
+            </div>
+            <div style={{ fontSize: '28px', fontWeight: '800', color: 'var(--text-primary)', marginTop: '4px' }}>
+              7.2
+            </div>
+            <div style={{ fontSize: '11.5px', color: 'var(--status-success-text)', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '3px' }}>
+              <ArrowUpRight size={13} />
+              <span>+0.4 This Month</span>
+            </div>
           </div>
-          <div className="stat-icon-box">
-            <Award size={20} />
-          </div>
+          <Sparkline data={[6.6, 6.8, 7.0, 7.1, 7.2]} color="var(--status-success-text)" width={74} height={32} />
         </div>
+
       </div>
 
-      {/* Main Grid: Batches Progress + Today's Schedule (Responsive) */}
-      <div className="teacher-main-grid">
+      {/* Main Grid: Batches Progress + Student Distribution Donut + Today's Schedule */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px' }}>
         
         {/* Batches Overview Card */}
-        <div className="edu-card" style={{ padding: '22px' }}>
+        <div className="edu-card" style={{ padding: '24px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
             <div>
-              <h3 style={{ fontSize: '14.5px', fontWeight: '700', color: 'var(--text-primary)' }}>Active Cohorts Overview</h3>
-              <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Progress and mock readiness across assigned classes</p>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: '500' }}>Assigned Cohorts</div>
+              <div style={{ fontSize: '16px', fontWeight: '800', color: 'var(--text-primary)' }}>Batch Progress & Syllabus</div>
             </div>
-            <button className="btn btn-secondary btn-sm" onClick={() => onNavigate('my-batches')}>
-              View All Batches
+            <button className="btn btn-secondary btn-sm" onClick={() => onNavigate('my-batches')} style={{ fontSize: '11.5px' }}>
+              View Batches
             </button>
           </div>
 
@@ -116,12 +149,12 @@ export default function TeacherDashboard({ onNavigate }) {
               <div 
                 key={batch.id} 
                 style={{ 
-                  padding: '14px 16px', 
-                  borderRadius: 'var(--radius-md)', 
+                  padding: '12px 14px', 
+                  borderRadius: '12px', 
                   border: '1px solid var(--border-color)', 
                   background: 'var(--bg-subtle)',
                   cursor: 'pointer',
-                  transition: 'border-color 0.12s ease'
+                  transition: 'border-color 0.15s ease'
                 }}
                 onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--border-hover)'}
                 onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--border-color)'}
@@ -129,23 +162,23 @@ export default function TeacherDashboard({ onNavigate }) {
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div>
-                    <div style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--text-primary)' }}>{batch.name}</div>
-                    <div style={{ fontSize: '11.5px', color: 'var(--text-muted)', marginTop: '2px' }}>
+                    <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-primary)' }}>{batch.name}</div>
+                    <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
                       {batch.studentsCount} Students • {batch.schedule} • Room: {batch.room}
                     </div>
                   </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <span className="badge badge-red">Avg Band {batch.avgBand}</span>
-                  </div>
+                  <span style={{ fontSize: '11px', fontWeight: '700', color: 'var(--primary-red)', background: 'var(--primary-red-subtle)', padding: '2px 8px', borderRadius: '999px' }}>
+                    Band {batch.avgBand}
+                  </span>
                 </div>
 
                 <div style={{ marginTop: '10px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '4px', color: 'var(--text-secondary)' }}>
                     <span>Syllabus Completion</span>
-                    <strong>{batch.progress}%</strong>
+                    <strong style={{ color: '#0F172A' }}>{batch.progress}%</strong>
                   </div>
-                  <div style={{ height: '4px', background: 'var(--border-color)', borderRadius: '2px', overflow: 'hidden' }}>
-                    <div style={{ width: `${batch.progress}%`, height: '100%', background: 'var(--primary-red)' }} />
+                  <div style={{ height: '5px', background: 'var(--border-color)', borderRadius: '3px', overflow: 'hidden' }}>
+                    <div style={{ width: `${batch.progress}%`, height: '100%', background: 'var(--primary-red)', borderRadius: '3px' }} />
                   </div>
                 </div>
               </div>
@@ -153,11 +186,37 @@ export default function TeacherDashboard({ onNavigate }) {
           </div>
         </div>
 
+        {/* Student Band Distribution Donut Pie Chart */}
+        <div className="edu-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ marginBottom: '16px' }}>
+            <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: '500' }}>Cohort Analytics</div>
+            <div style={{ fontSize: '16px', fontWeight: '800', color: 'var(--text-primary)' }}>Student Band Distribution</div>
+          </div>
+
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <DonutPieChart 
+              segments={[
+                { label: 'Band 8.0+ (Advanced)', value: 19, color: '#10B981' },
+                { label: 'Band 7.0-7.5 (Competent)', value: 46, color: '#0F172A' },
+                { label: 'Band 6.0-6.5 (Modest)', value: 15, color: '#C81E2E' },
+                { label: 'Below 6.0 (Developing)', value: 5, color: '#94A3B8' }
+              ]}
+              size={170}
+              strokeWidth={14}
+              centerTitle="85"
+              centerSubtitle="Candidates"
+            />
+          </div>
+        </div>
+
         {/* Today's Speaking Schedule */}
-        <div className="edu-card" style={{ padding: '22px' }}>
+        <div className="edu-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <h3 style={{ fontSize: '14.5px', fontWeight: '700', color: 'var(--text-primary)' }}>Today's Speaking Schedule</h3>
-            <span className="badge">4 Scheduled</span>
+            <div>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: '500' }}>Oral Interview Queue</div>
+              <div style={{ fontSize: '16px', fontWeight: '800', color: 'var(--text-primary)' }}>Today's Speaking Schedule</div>
+            </div>
+            <span style={{ fontSize: '11px', fontWeight: '600', color: 'var(--text-muted)' }}>4 Slots</span>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -166,8 +225,8 @@ export default function TeacherDashboard({ onNavigate }) {
                 key={idx} 
                 style={{ 
                   padding: '11px 13px', 
-                  borderRadius: 'var(--radius-md)', 
-                  background: item.status === 'Completed' ? 'var(--bg-subtle)' : 'var(--bg-card)',
+                  borderRadius: '10px', 
+                  background: item.status === 'Completed' ? 'var(--bg-subtle)' : '#FFFFFF',
                   border: '1px solid var(--border-color)',
                   display: 'flex',
                   alignItems: 'center',
@@ -178,24 +237,27 @@ export default function TeacherDashboard({ onNavigate }) {
                   <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-primary)' }}>
                     {item.student}
                   </div>
-                  <div style={{ fontSize: '11.5px', color: 'var(--text-muted)' }}>
-                    {item.time} • {item.room}
+                  <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>
+                    {item.type} • {item.room}
                   </div>
                 </div>
 
-                <div>
-                  {item.status === 'Completed' ? (
-                    <span className="badge badge-success">
-                      <CheckCircle2 size={11} /> Done
-                    </span>
-                  ) : (
-                    <button 
-                      className="btn btn-primary btn-sm"
-                      onClick={() => onNavigate('speaking-interview')}
-                    >
-                      <Mic size={11} /> Start
-                    </button>
-                  )}
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '11.5px', fontWeight: '700', color: '#0F172A' }}>{item.time}</div>
+                  <span 
+                    style={{
+                      fontSize: '10.5px',
+                      fontWeight: '600',
+                      padding: '1px 6px',
+                      borderRadius: '999px',
+                      background: item.status === 'Completed' ? '#F0FDF4' : '#EEF2FF',
+                      color: item.status === 'Completed' ? '#166534' : '#3730A3',
+                      display: 'inline-block',
+                      marginTop: '3px'
+                    }}
+                  >
+                    {item.status}
+                  </span>
                 </div>
               </div>
             ))}

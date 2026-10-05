@@ -4,48 +4,55 @@ import {
   BookOpen, 
   PenTool, 
   Mic, 
-  ArrowUpRight, 
   Calendar, 
-  Clock, 
+  ArrowUpRight, 
   CheckCircle2, 
+  Clock, 
   ChevronRight,
-  TrendingUp,
-  FileCheck,
-  AlertCircle
+  Filter
 } from 'lucide-react';
 import { CURRENT_USERS, STUDENT_RESULTS } from '../../data/mockData';
+import Sparkline from '../../components/charts/Sparkline';
+import SpiderChart from '../../components/charts/SpiderChart';
+import TrackBarChart from '../../components/charts/TrackBarChart';
+import RoundCirclePie from '../../components/charts/RoundCirclePie';
+import DonutPieChart from '../../components/charts/DonutPieChart';
 
 export default function StudentDashboard({ onNavigate }) {
   const user = CURRENT_USERS.student;
   const recentMock = STUDENT_RESULTS[0];
-  const pendingMock = STUDENT_RESULTS[3];
+  const [selectedTimeframe, setSelectedTimeframe] = useState('6M');
 
-  const [activeTooltip, setActiveTooltip] = useState(null);
+  // Sparkline historical data series for 4 skills
+  const sparkData = {
+    listening: [6.5, 7.0, 7.5, 8.0, 8.5],
+    reading: [6.5, 6.5, 7.0, 7.5, 8.0],
+    writing: [6.0, 6.0, 6.5, 6.5, 7.0],
+    speaking: [6.0, 6.5, 7.0, 7.0, 7.5]
+  };
 
-  // Band progression historical series
-  const progressMonths = [
-    { month: 'Jun', band: 6.0 },
-    { month: 'Jul', band: 6.5 },
-    { month: 'Aug', band: 7.0 },
-    { month: 'Sep', band: 7.0 },
-    { month: 'Oct', band: 7.5 }
+  const upcomingSessions = [
+    { id: 'SES-901', title: '1-on-1 Speaking Mock with Dr. Sarah', type: 'Speaking', date: 'Tomorrow, 2:30 PM', room: 'Lab 302', status: 'Scheduled' },
+    { id: 'SES-902', title: 'Cambridge IELTS 19 Full Academic Mock', type: 'Full Mock', date: 'Oct 12, 10:00 AM', room: 'Exam Hall A', status: 'Scheduled' },
+    { id: 'SES-899', title: 'Task 2 Essay: Urbanization Argument', type: 'Writing Review', date: 'Yesterday', room: 'Online Portal', status: 'In Review' },
+    { id: 'SES-898', title: 'Academic Reading Diagnostic Paper 4', type: 'Reading', date: 'Oct 03, 2025', room: 'Computer Lab 1', status: 'Evaluated' }
   ];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
       
-      {/* Top Welcome Header - Minimal & Clean */}
+      {/* Top Header - Modulix Style */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h1 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--text-primary)', letterSpacing: '-0.3px' }}>
-            Welcome back, {user.name}
+          <h1 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--text-primary)', letterSpacing: '-0.3px', margin: 0 }}>
+            Welcome, {user.name} 👋
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '2px' }}>
-            Cohort: <strong style={{ color: 'var(--text-primary)' }}>{user.batch}</strong> • Official Exam: <strong>{user.daysLeft} days remaining</strong> ({user.examDate})
+          <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '3px', margin: 0 }}>
+            Cohort: <strong style={{ color: 'var(--text-primary)' }}>{user.batch}</strong> • Target: <strong>Band {user.targetBand}</strong> • Official Exam in {user.daysLeft} days
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div style={{ display: 'flex', gap: '10px' }}>
           <button className="btn btn-secondary btn-sm" onClick={() => onNavigate('speaking-booking')}>
             <Calendar size={14} />
             <span>Book Speaking Slot</span>
@@ -57,292 +64,285 @@ export default function StudentDashboard({ onNavigate }) {
         </div>
       </div>
 
-      {/* Pending Result State Banner - Clean Minimal Card */}
-      <div 
-        className="edu-card" 
-        style={{ 
-          padding: '14px 18px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '12px',
-          background: 'var(--bg-card)',
-          borderLeft: '3px solid var(--primary-red)'
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <div className="stat-icon-box" style={{ width: '36px', height: '36px' }}>
-            <Clock size={16} color="var(--primary-red)" />
-          </div>
-          <div>
-            <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-primary)' }}>
-              In-Progress Evaluation: {pendingMock.title}
-            </div>
-            <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '1px' }}>
-              Listening & Reading evaluated (Band 8.5/8.0). Writing essay under examiner review. Speaking slot: Tomorrow 2:30 PM.
-            </div>
-          </div>
-        </div>
-        <button 
-          className="btn btn-secondary btn-sm"
-          onClick={() => onNavigate('my-results')}
-        >
-          Track Evaluation Status
-        </button>
-      </div>
-
-      {/* 4 Section Band Cards - Unified Design System */}
+      {/* 4 Metric Cards with Inline SVG Sparklines (SellPilot / Modulix Style) */}
       <div className="stats-grid">
+        
         {/* Listening Card */}
-        <div className="edu-card stat-card edu-card-interactive" onClick={() => onNavigate('listening-detail')}>
-          <div className="stat-info">
-            <span className="stat-label">Listening Band</span>
-            <span className="stat-value">{recentMock.listening}</span>
-            <span className="stat-trend up">
-              <ArrowUpRight size={13} /> 37/40 Correct (92%)
-            </span>
+        <div 
+          className="edu-card stat-card edu-card-interactive" 
+          onClick={() => onNavigate('listening-detail')}
+          style={{ padding: '20px 22px' }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(200, 30, 46, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Headphones size={15} color="var(--primary-red)" />
+              </div>
+              <span className="stat-label" style={{ margin: 0 }}>Listening</span>
+            </div>
+            <div style={{ fontSize: '28px', fontWeight: '800', color: 'var(--text-primary)', marginTop: '4px' }}>
+              {recentMock.listening}
+            </div>
+            <div style={{ fontSize: '11.5px', color: 'var(--status-success-text)', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '3px' }}>
+              <ArrowUpRight size={13} />
+              <span>37/40 (92%)</span>
+            </div>
           </div>
-          <div className="stat-icon-box">
-            <Headphones size={20} />
-          </div>
+          <Sparkline data={sparkData.listening} color="var(--status-success-text)" width={74} height={32} />
         </div>
 
         {/* Reading Card */}
-        <div className="edu-card stat-card edu-card-interactive" onClick={() => onNavigate('reading-detail')}>
-          <div className="stat-info">
-            <span className="stat-label">Reading Band</span>
-            <span className="stat-value">{recentMock.reading}</span>
-            <span className="stat-trend up">
-              <ArrowUpRight size={13} /> 35/40 Correct (88%)
-            </span>
+        <div 
+          className="edu-card stat-card edu-card-interactive" 
+          onClick={() => onNavigate('reading-detail')}
+          style={{ padding: '20px 22px' }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(15, 23, 42, 0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <BookOpen size={15} color="#0F172A" />
+              </div>
+              <span className="stat-label" style={{ margin: 0 }}>Reading</span>
+            </div>
+            <div style={{ fontSize: '28px', fontWeight: '800', color: 'var(--text-primary)', marginTop: '4px' }}>
+              {recentMock.reading}
+            </div>
+            <div style={{ fontSize: '11.5px', color: 'var(--status-success-text)', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '3px' }}>
+              <ArrowUpRight size={13} />
+              <span>35/40 (88%)</span>
+            </div>
           </div>
-          <div className="stat-icon-box">
-            <BookOpen size={20} />
-          </div>
+          <Sparkline data={sparkData.reading} color="#0F172A" width={74} height={32} />
         </div>
 
         {/* Writing Card */}
-        <div className="edu-card stat-card edu-card-interactive" onClick={() => onNavigate('writing-detail')}>
-          <div className="stat-info">
-            <span className="stat-label">Writing Band</span>
-            <span className="stat-value">{recentMock.writing}</span>
-            <span className="stat-trend" style={{ color: 'var(--primary-red)' }}>
+        <div 
+          className="edu-card stat-card edu-card-interactive" 
+          onClick={() => onNavigate('writing-detail')}
+          style={{ padding: '20px 22px' }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(200, 30, 46, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <PenTool size={15} color="var(--primary-red)" />
+              </div>
+              <span className="stat-label" style={{ margin: 0 }}>Writing</span>
+            </div>
+            <div style={{ fontSize: '28px', fontWeight: '800', color: 'var(--text-primary)', marginTop: '4px' }}>
+              {recentMock.writing}
+            </div>
+            <div style={{ fontSize: '11.5px', color: 'var(--primary-red)', fontWeight: '600' }}>
               Needs +0.5 to Goal
-            </span>
+            </div>
           </div>
-          <div className="stat-icon-box">
-            <PenTool size={20} />
-          </div>
+          <Sparkline data={sparkData.writing} color="var(--primary-red)" width={74} height={32} />
         </div>
 
         {/* Speaking Card */}
-        <div className="edu-card stat-card edu-card-interactive" onClick={() => onNavigate('speaking-detail')}>
-          <div className="stat-info">
-            <span className="stat-label">Speaking Band</span>
-            <span className="stat-value">{recentMock.speaking}</span>
-            <span className="stat-trend up">
-              <ArrowUpRight size={13} /> Certified Band
-            </span>
+        <div 
+          className="edu-card stat-card edu-card-interactive" 
+          onClick={() => onNavigate('speaking-detail')}
+          style={{ padding: '20px 22px' }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(16, 185, 129, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Mic size={15} color="#10B981" />
+              </div>
+              <span className="stat-label" style={{ margin: 0 }}>Speaking</span>
+            </div>
+            <div style={{ fontSize: '28px', fontWeight: '800', color: 'var(--text-primary)', marginTop: '4px' }}>
+              {recentMock.speaking}
+            </div>
+            <div style={{ fontSize: '11.5px', color: 'var(--status-success-text)', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '3px' }}>
+              <ArrowUpRight size={13} />
+              <span>Certified Band</span>
+            </div>
           </div>
-          <div className="stat-icon-box">
-            <Mic size={20} />
-          </div>
+          <Sparkline data={sparkData.speaking} color="#10B981" width={74} height={32} />
         </div>
       </div>
 
-      {/* Main Grid: Band Gauge + Progression Chart + Urgent Actions (Responsive) */}
-      <div className="dashboard-analytics-grid">
+      {/* Visual Analytics Row 1: Modulix Bar Chart + Spider/Radar Chart */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '20px' }}>
         
-        {/* Overall Band Gauge Card */}
-        <div className="edu-card" style={{ padding: '22px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-          <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-            <h3 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)' }}>Overall Band Score</h3>
-            <span className="badge badge-red">Latest Mock</span>
-          </div>
+        {/* Left: Overview Track Bar Chart (Modulix Inspired) */}
+        <div className="edu-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
+            <div>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: '500' }}>Historical Calibration</div>
+              <div style={{ fontSize: '18px', fontWeight: '800', color: 'var(--text-primary)', marginTop: '2px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span>Band 7.5</span>
+                <span style={{ fontSize: '12px', color: '#10B981', fontWeight: '700', background: '#F0FDF4', padding: '2px 8px', borderRadius: '999px' }}>
+                  +1.5 Growth
+                </span>
+              </div>
+            </div>
 
-          <div className="band-gauge-wrapper" style={{ margin: '10px 0' }}>
-            <svg width="160" height="160" viewBox="0 0 100 100">
-              {/* Background Ring */}
-              <circle
-                cx="50"
-                cy="50"
-                r="40"
-                fill="none"
-                stroke="var(--bg-subtle)"
-                strokeWidth="8"
-              />
-              {/* Active Progress Ring (7.5 out of 9.0) */}
-              <circle
-                cx="50"
-                cy="50"
-                r="40"
-                fill="none"
-                stroke="var(--primary-red)"
-                strokeWidth="8"
-                strokeDasharray="251.2"
-                strokeDashoffset={251.2 * (1 - 7.5 / 9.0)}
-                strokeLinecap="round"
-                transform="rotate(-90 50 50)"
-                style={{ transition: 'stroke-dashoffset 0.8s ease' }}
-              />
-            </svg>
-            <div className="band-gauge-score">
-              <div className="num">7.5</div>
-              <div className="sub">Goal: {user.targetBand}</div>
+            {/* Timeframe selector */}
+            <div style={{ display: 'flex', gap: '4px', background: 'var(--bg-subtle)', padding: '3px', borderRadius: '8px' }}>
+              {['6M', '1Y', 'All'].map(t => (
+                <button
+                  key={t}
+                  onClick={() => setSelectedTimeframe(t)}
+                  style={{
+                    background: selectedTimeframe === t ? '#FFFFFF' : 'none',
+                    border: 'none',
+                    padding: '3px 9px',
+                    borderRadius: '6px',
+                    fontSize: '11.5px',
+                    fontWeight: selectedTimeframe === t ? '700' : '500',
+                    color: selectedTimeframe === t ? '#0F172A' : '#64748B',
+                    boxShadow: selectedTimeframe === t ? '0 1px 2px rgba(0,0,0,0.05)' : 'none',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {t}
+                </button>
+              ))}
             </div>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '8px', width: '100%' }}>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '10.5px', color: 'var(--text-muted)' }}>CEFR LEVEL</div>
-              <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-primary)' }}>C1 Advanced</div>
-            </div>
-            <div style={{ width: '1px', background: 'var(--border-color)' }} />
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '10.5px', color: 'var(--text-muted)' }}>COHORT RANK</div>
-              <div style={{ fontSize: '13px', fontWeight: '700', color: 'var(--status-success-text)' }}>Top 8%</div>
-            </div>
-          </div>
-
-          <button 
-            className="btn btn-secondary btn-sm" 
-            style={{ width: '100%', marginTop: '18px' }}
-            onClick={() => onNavigate('progress-analytics')}
-          >
-            <span>View Full Breakdown</span>
-            <ChevronRight size={13} />
-          </button>
+          {/* Visual Track Bar Chart */}
+          <TrackBarChart />
         </div>
 
-        {/* Progress Trend Bar Chart */}
-        <div className="edu-card" style={{ padding: '22px', display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+        {/* Right: 4-Skill Spider / Radar Chart (Specifically Requested) */}
+        <div className="edu-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
             <div>
-              <h3 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)' }}>Band Score Progression</h3>
-              <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Historical calibration across 5 official mock examinations</p>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: '500' }}>Skill Balance</div>
+              <div style={{ fontSize: '16px', fontWeight: '800', color: 'var(--text-primary)' }}>Competency Radar</div>
             </div>
-            <span className="badge badge-success">+1.5 Band Growth</span>
-          </div>
-
-          {/* Custom SVG Bar Chart */}
-          <div style={{ flex: 1, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', padding: '16px 8px 8px', height: '170px', borderBottom: '1px solid var(--border-color)', position: 'relative' }}>
-            {progressMonths.map((item, idx) => {
-              const heightPercent = (item.band / 9.0) * 100;
-              const isLatest = idx === progressMonths.length - 1;
-              return (
-                <div 
-                  key={idx} 
-                  style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '44px', position: 'relative' }}
-                  onMouseEnter={() => setActiveTooltip(idx)}
-                  onMouseLeave={() => setActiveTooltip(null)}
-                >
-                  {/* Tooltip on hover */}
-                  {activeTooltip === idx && (
-                    <div style={{
-                      position: 'absolute',
-                      bottom: `${heightPercent + 12}%`,
-                      background: 'var(--brand-dark)',
-                      color: '#FFF',
-                      padding: '3px 7px',
-                      borderRadius: '4px',
-                      fontSize: '11px',
-                      fontWeight: '600',
-                      whiteSpace: 'nowrap',
-                      zIndex: 10
-                    }}>
-                      Band {item.band} ({item.month})
-                    </div>
-                  )}
-
-                  {/* Vertical bar */}
-                  <div style={{
-                    width: '28px',
-                    height: `${heightPercent}%`,
-                    background: isLatest ? 'var(--primary-red)' : 'var(--border-color)',
-                    borderRadius: '4px 4px 0 0',
-                    transition: 'all 0.2s ease',
-                    cursor: 'pointer'
-                  }} />
-                  <span style={{ fontSize: '11.5px', fontWeight: isLatest ? '700' : '500', color: isLatest ? 'var(--primary-red)' : 'var(--text-muted)', marginTop: '6px' }}>
-                    {item.month}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '14px' }}>
-            <div style={{ display: 'flex', gap: '14px', fontSize: '11.5px', color: 'var(--text-secondary)' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <span style={{ width: '8px', height: '8px', background: 'var(--primary-red)', borderRadius: '2px' }} />
-                Current Band: 7.5
-              </span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <span style={{ width: '8px', height: '8px', background: 'var(--border-color)', borderRadius: '2px' }} />
-                Historical Mocks
-              </span>
-            </div>
-            <button className="btn btn-subtle btn-sm" onClick={() => onNavigate('answer-review')}>
-              Answer Key Audit
+            <button 
+              className="btn btn-secondary btn-sm"
+              onClick={() => onNavigate('progress-analytics')}
+              style={{ padding: '4px 10px', fontSize: '11.5px' }}
+            >
+              <span>Full Analytics</span>
+              <ChevronRight size={13} />
             </button>
           </div>
+
+          {/* Spider / Radar Chart Visual */}
+          <SpiderChart 
+            skills={[
+              { label: 'Listening', current: recentMock.listening, target: user.targetBand },
+              { label: 'Reading', current: recentMock.reading, target: user.targetBand },
+              { label: 'Writing', current: recentMock.writing, target: user.targetBand },
+              { label: 'Speaking', current: recentMock.speaking, target: user.targetBand }
+            ]}
+            size={220}
+          />
+        </div>
+      </div>
+
+      {/* Visual Analytics Row 2: Donut Question Distribution + Radial Gauge + Upcoming Table */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+        
+        {/* Question Type Accuracy Donut Pie */}
+        <div className="edu-card" style={{ padding: '24px' }}>
+          <div style={{ marginBottom: '16px' }}>
+            <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: '500' }}>Reading & Listening</div>
+            <div style={{ fontSize: '16px', fontWeight: '800', color: 'var(--text-primary)' }}>Accuracy by Question Type</div>
+          </div>
+          
+          <DonutPieChart 
+            segments={[
+              { label: 'True / False / NG', value: 14, color: '#C81E2E' },
+              { label: 'Multiple Choice', value: 11, color: '#0F172A' },
+              { label: 'Matching Headings', value: 8, color: '#10B981' },
+              { label: 'Sentence Completion', value: 7, color: '#94A3B8' }
+            ]}
+            size={160}
+            strokeWidth={14}
+            centerTitle="40"
+            centerSubtitle="Items"
+          />
         </div>
 
-        {/* Actionable To-Do & Speaking Schedule */}
-        <div className="edu-card" style={{ padding: '22px', display: 'flex', flexDirection: 'column' }}>
+        {/* Radial Target Attainment Gauge (Round Circle Pie) */}
+        <div className="edu-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: '500' }}>Target Milestone</div>
+              <div style={{ fontSize: '16px', fontWeight: '800', color: 'var(--text-primary)' }}>Official Exam Readiness</div>
+            </div>
+            <span style={{ fontSize: '11.5px', fontWeight: '700', color: '#10B981', background: '#F0FDF4', padding: '2px 8px', borderRadius: '999px' }}>
+              Top 8%
+            </span>
+          </div>
+
+          <RoundCirclePie value={recentMock.overallBand} target={user.targetBand} size={155} strokeWidth={11} />
+
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '20px', marginTop: '16px', width: '100%', borderTop: '1px solid var(--border-color)', paddingTop: '12px' }}>
+            <div>
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>CEFR Level</div>
+              <div style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--text-primary)' }}>C1 Advanced</div>
+            </div>
+            <div style={{ width: '1px', background: 'var(--border-color)' }} />
+            <div>
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Mocks Completed</div>
+              <div style={{ fontSize: '13.5px', fontWeight: '700', color: 'var(--text-primary)' }}>5 of 8</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Clean Sessions Table (Modulix Style) */}
+        <div className="edu-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-            <h3 style={{ fontSize: '14px', fontWeight: '700', color: 'var(--text-primary)' }}>Action Items</h3>
-            <span className="badge badge-warning">3 Pending</span>
+            <div>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: '500' }}>Schedule</div>
+              <div style={{ fontSize: '16px', fontWeight: '800', color: 'var(--text-primary)' }}>Upcoming Mock Sessions</div>
+            </div>
+            <button 
+              className="btn btn-subtle btn-sm"
+              onClick={() => onNavigate('my-results')}
+              style={{ fontSize: '11.5px' }}
+            >
+              View All
+            </button>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <div 
-              style={{ padding: '11px 13px', background: 'var(--bg-subtle)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', cursor: 'pointer' }}
-              onClick={() => onNavigate('writing-detail')}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '10.5px', fontWeight: '700', color: 'var(--primary-red)', textTransform: 'uppercase' }}>High Priority</span>
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Due Today</span>
+            {upcomingSessions.map((ses) => (
+              <div 
+                key={ses.id}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '10px 12px',
+                  borderRadius: '10px',
+                  background: 'var(--bg-subtle)',
+                  border: '1px solid var(--border-color)',
+                  fontSize: '12.5px'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: ses.status === 'Scheduled' ? '#10B981' : 'var(--primary-red)' }} />
+                  <div>
+                    <div style={{ fontWeight: '600', color: 'var(--text-primary)' }}>{ses.title}</div>
+                    <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{ses.date} • {ses.room}</div>
+                  </div>
+                </div>
+                <span 
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: '600',
+                    padding: '2px 8px',
+                    borderRadius: '999px',
+                    background: ses.status === 'Scheduled' ? '#F0FDF4' : ses.status === 'Evaluated' ? '#EEF2FF' : '#FEF3C7',
+                    color: ses.status === 'Scheduled' ? '#166534' : ses.status === 'Evaluated' ? '#3730A3' : '#92400E'
+                  }}
+                >
+                  {ses.status}
+                </span>
               </div>
-              <div style={{ fontSize: '12.5px', fontWeight: '600', color: 'var(--text-primary)', marginTop: '3px' }}>
-                Review AI Vocabulary Rewrites for Task 2
-              </div>
-              <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', marginTop: '2px' }}>
-                Collocation improvements to reach Band 7.5.
-              </p>
-            </div>
-
-            <div 
-              style={{ padding: '11px 13px', background: 'var(--bg-subtle)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', cursor: 'pointer' }}
-              onClick={() => onNavigate('speaking-booking')}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '10.5px', fontWeight: '700', color: 'var(--brand-dark)', textTransform: 'uppercase' }}>Speaking</span>
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Tomorrow</span>
-              </div>
-              <div style={{ fontSize: '12.5px', fontWeight: '600', color: 'var(--text-primary)', marginTop: '3px' }}>
-                1-on-1 Speaking Slot with Dr. Sarah
-              </div>
-              <p style={{ fontSize: '11.5px', color: 'var(--text-secondary)', marginTop: '2px' }}>
-                Room 302 / Zoom link active 15m prior.
-              </p>
-            </div>
-
-            <div 
-              style={{ padding: '11px 13px', background: 'var(--bg-subtle)', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)', cursor: 'pointer' }}
-              onClick={() => onNavigate('answer-review')}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '10.5px', fontWeight: '700', color: 'var(--brand-dark)', textTransform: 'uppercase' }}>Mistake Log</span>
-                <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>3 Questions</span>
-              </div>
-              <div style={{ fontSize: '12.5px', fontWeight: '600', color: 'var(--text-primary)', marginTop: '3px' }}>
-                Re-attempt True/False/Not Given in Passage 3
-              </div>
-            </div>
+            ))}
           </div>
         </div>
+
       </div>
 
     </div>

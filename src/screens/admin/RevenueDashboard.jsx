@@ -9,112 +9,167 @@ import {
   Download
 } from 'lucide-react';
 import { PLATFORM_TENANTS } from '../../data/mockData';
+import Sparkline from '../../components/charts/Sparkline';
+import TrackBarChart from '../../components/charts/TrackBarChart';
+import DonutPieChart from '../../components/charts/DonutPieChart';
 
 export default function RevenueDashboard() {
-  const regions = [
-    { country: 'Bangladesh (HQ & Franchises)', share: '58%', mrr: '$74,500', tenants: 18 },
-    { country: 'United Kingdom (London & Manchester)', share: '22%', mrr: '$28,200', tenants: 7 },
-    { country: 'Australia (Sydney & Melbourne)', share: '12%', mrr: '$15,400', tenants: 5 },
-    { country: 'Canada & Middle East', share: '8%', mrr: '$10,400', tenants: 4 }
+  const mrrSeries = [
+    { label: 'May', value: 92, detail: '$92,000 MRR' },
+    { label: 'Jun', value: 98, detail: '$98,000 MRR' },
+    { label: 'Jul', value: 106, detail: '$106,000 MRR' },
+    { label: 'Aug', value: 114, detail: '$114,000 MRR' },
+    { label: 'Sep', value: 121, detail: '$121,000 MRR' },
+    { label: 'Oct', value: 128.5, detail: '$128,500 MRR (Current)' }
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
       
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: '800' }}>
-            Global Revenue & Commercial Analytics
+          <h1 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--text-primary)', letterSpacing: '-0.3px', margin: 0 }}>
+            Revenue & Commercial Analytics
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '13.5px' }}>
-            Multi-tenant recurring revenue (MRR), annualized run rate (ARR), and international franchise licensing.
+          <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '3px', margin: 0 }}>
+            Global recurring revenue, expansion metrics, and institutional licensing
           </p>
         </div>
 
-        <button className="btn btn-primary" onClick={() => alert("Exporting Global Financial Statements (CSV)...")}>
+        <button className="btn btn-primary btn-sm" onClick={() => alert("Exporting Global Financial Statements (CSV)...")}>
           <Download size={14} />
-          <span>Export Financial Ledger</span>
+          <span>Export Statements</span>
         </button>
       </div>
 
-      {/* 4 Stat Cards */}
+      {/* 4 Stat Cards with Inline SVG Sparklines (SellPilot Style) */}
       <div className="stats-grid">
-        <div className="edu-card stat-card">
-          <div className="stat-info">
-            <span className="stat-label">Global Monthly Recurring Revenue</span>
-            <span className="stat-value">$128,500</span>
-            <span className="stat-trend up">
-              <ArrowUpRight size={14} /> +14.2% MoM
-            </span>
+        
+        <div className="edu-card stat-card" style={{ padding: '20px 22px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(16, 185, 129, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <DollarSign size={15} color="#10B981" />
+              </div>
+              <span className="stat-label" style={{ margin: 0 }}>Global MRR</span>
+            </div>
+            <div style={{ fontSize: '28px', fontWeight: '800', color: 'var(--text-primary)', marginTop: '4px' }}>
+              $128.5k
+            </div>
+            <div style={{ fontSize: '11.5px', color: 'var(--status-success-text)', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '3px' }}>
+              <ArrowUpRight size={13} />
+              <span>+14.2% MoM</span>
+            </div>
           </div>
-          <div className="stat-icon-box" style={{ background: 'var(--accent-green-light)', color: 'var(--accent-green)' }}>
-            <DollarSign size={22} />
-          </div>
+          <Sparkline data={[98, 106, 114, 121, 128.5]} color="#10B981" width={74} height={32} />
         </div>
 
-        <div className="edu-card stat-card">
-          <div className="stat-info">
-            <span className="stat-label">Annualized Run Rate (ARR)</span>
-            <span className="stat-value">$1.54M</span>
-            <span className="stat-trend up">+32% YoY</span>
+        <div className="edu-card stat-card" style={{ padding: '20px 22px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(15, 23, 42, 0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <TrendingUp size={15} color="#0F172A" />
+              </div>
+              <span className="stat-label" style={{ margin: 0 }}>Annual Run Rate</span>
+            </div>
+            <div style={{ fontSize: '28px', fontWeight: '800', color: 'var(--text-primary)', marginTop: '4px' }}>
+              $1.54M
+            </div>
+            <div style={{ fontSize: '11.5px', color: 'var(--status-success-text)', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '3px' }}>
+              <ArrowUpRight size={13} />
+              <span>+32% YoY</span>
+            </div>
           </div>
-          <div className="stat-icon-box" style={{ background: 'var(--accent-blue-light)', color: 'var(--accent-blue)' }}>
-            <TrendingUp size={22} />
-          </div>
+          <Sparkline data={[1.1, 1.2, 1.35, 1.45, 1.54]} color="#0F172A" width={74} height={32} />
         </div>
 
-        <div className="edu-card stat-card">
-          <div className="stat-info">
-            <span className="stat-label">Average Revenue Per Tenant</span>
-            <span className="stat-value">$3,780</span>
-            <span className="stat-trend up">+8.5% Net Expansion</span>
+        <div className="edu-card stat-card" style={{ padding: '20px 22px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(200, 30, 46, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Building2 size={15} color="var(--primary-red)" />
+              </div>
+              <span className="stat-label" style={{ margin: 0 }}>Avg Revenue / Tenant</span>
+            </div>
+            <div style={{ fontSize: '28px', fontWeight: '800', color: 'var(--text-primary)', marginTop: '4px' }}>
+              $3,780
+            </div>
+            <div style={{ fontSize: '11.5px', color: 'var(--status-success-text)', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '3px' }}>
+              <ArrowUpRight size={13} />
+              <span>+8.5% Expansion</span>
+            </div>
           </div>
-          <div className="stat-icon-box" style={{ background: 'var(--primary-red-subtle)', color: 'var(--primary-red)' }}>
-            <Building2 size={22} />
-          </div>
+          <Sparkline data={[3200, 3400, 3550, 3680, 3780]} color="var(--primary-red)" width={74} height={32} />
         </div>
 
-        <div className="edu-card stat-card">
-          <div className="stat-info">
-            <span className="stat-label">Annual Churn Rate</span>
-            <span className="stat-value">1.8%</span>
-            <span className="stat-trend up" style={{ color: 'var(--accent-green)' }}>World-Class Low</span>
+        <div className="edu-card stat-card" style={{ padding: '20px 22px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ width: '28px', height: '28px', borderRadius: '8px', background: 'rgba(16, 185, 129, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Award size={15} color="#10B981" />
+              </div>
+              <span className="stat-label" style={{ margin: 0 }}>Annual Churn</span>
+            </div>
+            <div style={{ fontSize: '28px', fontWeight: '800', color: 'var(--text-primary)', marginTop: '4px' }}>
+              1.8%
+            </div>
+            <div style={{ fontSize: '11.5px', color: 'var(--status-success-text)', fontWeight: '600' }}>
+              Industry Leading
+            </div>
           </div>
-          <div className="stat-icon-box" style={{ background: 'var(--accent-purple-light)', color: 'var(--accent-purple)' }}>
-            <Award size={22} />
-          </div>
+          <Sparkline data={[2.5, 2.3, 2.1, 1.9, 1.8]} color="#10B981" width={74} height={32} isPositive={true} />
         </div>
+
       </div>
 
-      {/* Regional Revenue Distribution Card */}
-      <div className="edu-card" style={{ padding: '24px' }}>
-        <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '16px' }}>
-          Geographic & International Franchise Breakdown
-        </h3>
-
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {regions.map((reg, idx) => (
-            <div key={idx} style={{ padding: '16px', background: '#F8FAFC', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                <div>
-                  <span style={{ fontWeight: '700', fontSize: '14px', color: 'var(--text-primary)' }}>{reg.country}</span>
-                  <span style={{ fontSize: '12px', color: 'var(--text-muted)', marginLeft: '8px' }}>({reg.tenants} licensed institutes)</span>
-                </div>
-                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                  <span className="badge badge-slate">{reg.share} of Total</span>
-                  <span style={{ fontFamily: 'var(--font-display)', fontSize: '17px', fontWeight: '800', color: 'var(--accent-green)' }}>
-                    {reg.mrr} / mo
-                  </span>
-                </div>
-              </div>
-
-              <div style={{ height: '7px', background: '#E2E8F0', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ width: reg.share, height: '100%', background: 'var(--primary-red)' }} />
-              </div>
+      {/* Visual Analytics Grid: MRR Growth Track Bar Chart + Regional Donut */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '20px' }}>
+        
+        {/* MRR Growth Chart */}
+        <div className="edu-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+            <div>
+              <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: '500' }}>Revenue Velocity</div>
+              <div style={{ fontSize: '16px', fontWeight: '800', color: 'var(--text-primary)' }}>Monthly Recurring Growth ($k)</div>
             </div>
-          ))}
+            <span style={{ fontSize: '11.5px', fontWeight: '700', color: '#10B981', background: '#F0FDF4', padding: '2px 8px', borderRadius: '999px' }}>
+              +39.6% 6-Month Run
+            </span>
+          </div>
+
+          <TrackBarChart 
+            items={mrrSeries} 
+            maxVal={150} 
+            height={180} 
+            accentColor="#0F172A"
+            brandColor="#10B981"
+          />
         </div>
+
+        {/* Regional Donut Pie */}
+        <div className="edu-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ marginBottom: '16px' }}>
+            <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: '500' }}>Global Footprint</div>
+            <div style={{ fontSize: '16px', fontWeight: '800', color: 'var(--text-primary)' }}>Regional Revenue Share</div>
+          </div>
+
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <DonutPieChart 
+              segments={[
+                { label: 'Bangladesh HQ', value: 58, color: '#C81E2E' },
+                { label: 'United Kingdom', value: 22, color: '#0F172A' },
+                { label: 'Australia', value: 12, color: '#10B981' },
+                { label: 'Canada & ME', value: 8, color: '#64748B' }
+              ]}
+              size={170}
+              strokeWidth={14}
+              centerTitle="$128k"
+              centerSubtitle="MRR"
+            />
+          </div>
+        </div>
+
       </div>
 
     </div>

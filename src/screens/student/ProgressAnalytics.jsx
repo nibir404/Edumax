@@ -1,99 +1,204 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   TrendingUp, 
-  Sparkles, 
   Target, 
   Award, 
-  Calendar, 
-  CheckCircle,
-  HelpCircle,
-  ArrowUpRight
+  ArrowUpRight,
+  ChevronRight
 } from 'lucide-react';
 import { CURRENT_USERS } from '../../data/mockData';
+import SpiderChart from '../../components/charts/SpiderChart';
+import DotBarChart from '../../components/charts/DotBarChart';
+import DonutPieChart from '../../components/charts/DonutPieChart';
+import RoundCirclePie from '../../components/charts/RoundCirclePie';
 
 export default function ProgressAnalytics() {
   const user = CURRENT_USERS.student;
+  const [activeTab, setActiveTab] = useState('reading');
 
-  const masteryGrid = [
-    { skill: 'Listening: Section 1 & 2 (Everyday Social)', mastery: 96, status: 'Mastered' },
-    { skill: 'Listening: Section 3 & 4 (Academic Seminars)', mastery: 90, status: 'Mastered' },
-    { skill: 'Reading: True / False / Not Given Recognition', mastery: 89, status: 'Proficient' },
-    { skill: 'Reading: Headings & Paragraph Matching', mastery: 85, status: 'Proficient' },
-    { skill: 'Speaking: Fluency & Discourse Markers', mastery: 84, status: 'Proficient' },
-    { skill: 'Speaking: Lexical Resource & Idiomatic Flow', mastery: 88, status: 'Proficient' },
-    { skill: 'Writing: Task 1 Report Overview & Data Trends', mastery: 80, status: 'Solid' },
-    { skill: 'Writing: Task 2 Complex Grammar & Collocations', mastery: 68, status: 'Needs Improvement' }
+  const skillsData = [
+    { label: 'Listening', current: 8.5, target: 8.0 },
+    { label: 'Reading', current: 8.0, target: 8.0 },
+    { label: 'Writing', current: 7.0, target: 8.0 },
+    { label: 'Speaking', current: 7.5, target: 8.0 }
+  ];
+
+  const subskillBreakdown = [
+    { skill: 'Everyday Dialogue (Listening Sec 1-2)', score: 96, band: 9.0 },
+    { skill: 'Academic Monologues (Listening Sec 3-4)', score: 88, band: 8.0 },
+    { skill: 'True / False / Not Given (Reading)', score: 85, band: 8.0 },
+    { skill: 'Heading Matching (Reading)', score: 90, band: 8.5 },
+    { skill: 'Fluency & Discourse (Speaking Part 2)', score: 84, band: 7.5 },
+    { skill: 'Lexical Range & Idioms (Speaking)', score: 88, band: 8.0 },
+    { skill: 'Data Trends & Synthesis (Writing Task 1)', score: 80, band: 7.5 },
+    { skill: 'Coherence & Task Response (Writing Task 2)', score: 68, band: 6.5 }
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
       
       {/* Header */}
       <div>
-        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: '800' }}>
+        <h1 style={{ fontSize: '24px', fontWeight: '800', color: 'var(--text-primary)', letterSpacing: '-0.3px', margin: 0 }}>
           Progress Analytics & Band Predictor
         </h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '13.5px' }}>
-          Empirical competency mapping based on authentic Cambridge score scaling algorithms.
+        <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '2px', margin: 0 }}>
+          Real-time competency calibration against Cambridge IELTS assessment rubrics
         </p>
       </div>
 
-      {/* Top Prediction Widget (AI Predicted Band) */}
+      {/* Top Prediction Metric - Minimalist 60/30/10 Card */}
       <div 
         className="edu-card" 
         style={{ 
-          padding: '28px', 
-          background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)', 
-          color: '#FFFFFF',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexWrap: 'wrap',
-          gap: '20px'
+          padding: '24px 28px', 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          flexWrap: 'wrap', 
+          gap: '20px',
+          background: '#FFFFFF',
+          borderLeft: '4px solid var(--primary-red)'
         }}
       >
-        <div style={{ maxWidth: '540px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#38BDF8', fontSize: '13px', fontWeight: '700', textTransform: 'uppercase' }}>
-            <Sparkles size={16} />
-            <span>AI Predictive Exam Algorithm</span>
+        <div>
+          <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.4px' }}>
+            Official Score Projection
           </div>
-          <h2 style={{ fontSize: '24px', fontWeight: '800', marginTop: '6px' }}>
-            Projected Official Score: Band 8.0
-          </h2>
-          <p style={{ fontSize: '13px', color: '#94A3B8', marginTop: '6px', lineHeight: 1.6 }}>
-            Based on your last 4 mock iterations, high Listening performance (8.5), and strong speaking flow, our regression model projects an official test score between <strong>Band 7.5 and 8.0</strong>.
+          <div style={{ fontSize: '32px', fontWeight: '800', color: 'var(--text-primary)', marginTop: '2px' }}>
+            Band 8.0 Target Attainable
+          </div>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px', margin: 0 }}>
+            Projected range: <strong>Band 7.5 — 8.0</strong> • Receptive skills leading with 8.5 average.
           </p>
         </div>
 
-        <div style={{ textAlign: 'center', background: 'rgba(255,255,255,0.06)', padding: '20px 32px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.1)' }}>
-          <div style={{ fontSize: '12px', color: '#94A3B8', textTransform: 'uppercase', fontWeight: '600' }}>Model Confidence</div>
-          <div style={{ fontSize: '38px', fontWeight: '900', color: '#10B981', lineHeight: 1.1, marginTop: '4px' }}>94%</div>
-          <div style={{ fontSize: '11px', color: '#CBD5E1', marginTop: '4px' }}>High Statistical Reliability</div>
+        <div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: '600' }}>Statistical Confidence</div>
+            <div style={{ fontSize: '26px', fontWeight: '800', color: '#10B981' }}>94%</div>
+          </div>
+          <div style={{ width: '1px', height: '36px', background: 'var(--border-color)' }} />
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: '600' }}>Target Attainment</div>
+            <div style={{ fontSize: '26px', fontWeight: '800', color: 'var(--primary-red)' }}>93.8%</div>
+          </div>
         </div>
       </div>
 
-      {/* Skill Mastery Grid (Panacea / Lurni Style) */}
-      <div className="edu-card" style={{ padding: '24px' }}>
-        <h3 style={{ fontSize: '16px', fontWeight: '700', marginBottom: '16px' }}>Sub-Skill Mastery Matrix</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '16px' }}>
-          {masteryGrid.map((item, idx) => (
-            <div key={idx} style={{ padding: '16px', background: '#F8FAFC', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-primary)' }}>{item.skill}</span>
-                <span className={`badge ${item.mastery >= 90 ? 'badge-green' : item.mastery >= 80 ? 'badge-blue' : 'badge-amber'}`}>
-                  {item.mastery}%
-                </span>
+      {/* Visual Analytics Row 1: Spider Chart + Item Dot Bar Chart */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '20px' }}>
+        
+        {/* 4-Skill Spider / Radar Chart */}
+        <div className="edu-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div style={{ width: '100%', marginBottom: '14px' }}>
+            <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: '500' }}>Skill Profile</div>
+            <div style={{ fontSize: '16px', fontWeight: '800', color: 'var(--text-primary)' }}>4-Skill Competency Spider</div>
+          </div>
+
+          <SpiderChart skills={skillsData} size={240} />
+        </div>
+
+        {/* 40-Question Item-by-Item Dot Bar Chart */}
+        <div className="edu-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+              <div>
+                <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: '500' }}>Visual Dot Matrix</div>
+                <div style={{ fontSize: '16px', fontWeight: '800', color: 'var(--text-primary)' }}>40-Question Accuracy Map</div>
               </div>
-              <div style={{ height: '7px', background: '#E2E8F0', borderRadius: '4px', overflow: 'hidden' }}>
-                <div style={{ 
-                  width: `${item.mastery}%`, 
-                  height: '100%', 
-                  background: item.mastery >= 90 ? 'var(--accent-green)' : item.mastery >= 80 ? 'var(--accent-blue)' : 'var(--accent-amber)' 
-                }} />
+              <div style={{ display: 'flex', gap: '4px', background: 'var(--bg-subtle)', padding: '2px', borderRadius: '6px' }}>
+                {['reading', 'listening'].map(tab => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    style={{
+                      background: activeTab === tab ? '#FFFFFF' : 'none',
+                      border: 'none',
+                      padding: '3px 8px',
+                      borderRadius: '4px',
+                      fontSize: '11px',
+                      fontWeight: activeTab === tab ? '700' : '500',
+                      color: activeTab === tab ? '#0F172A' : '#64748B',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {tab.toUpperCase()}
+                  </button>
+                ))}
               </div>
             </div>
-          ))}
+
+            {/* Dot Bar Visual */}
+            <DotBarChart dotsPerRow={20} />
+          </div>
+
+          {/* Sub-note */}
+          <div style={{ borderTop: '1px solid var(--border-color)', paddingTop: '14px', marginTop: '14px', display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', color: 'var(--text-secondary)' }}>
+            <span>Receptive Raw Score: <strong>37 / 40</strong></span>
+            <span style={{ color: 'var(--primary-red)', fontWeight: '600' }}>3 Distractor Traps Flagged</span>
+          </div>
         </div>
+
+      </div>
+
+      {/* Visual Analytics Row 2: Sub-Skill Progress Bars + Donut Distribution */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '20px' }}>
+        
+        {/* Sub-Skill Mastery Bars */}
+        <div className="edu-card" style={{ padding: '24px' }}>
+          <div style={{ marginBottom: '16px' }}>
+            <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: '500' }}>Micro-Skill Calibrations</div>
+            <div style={{ fontSize: '16px', fontWeight: '800', color: 'var(--text-primary)' }}>Skill Mastery Matrix</div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {subskillBreakdown.map((item, idx) => (
+              <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
+                  <span style={{ fontWeight: '600', color: 'var(--text-primary)' }}>{item.skill}</span>
+                  <span style={{ fontWeight: '700', color: item.score >= 85 ? '#10B981' : item.score >= 75 ? '#0F172A' : 'var(--primary-red)' }}>
+                    Band {item.band} ({item.score}%)
+                  </span>
+                </div>
+                <div style={{ height: '6px', background: 'var(--bg-subtle)', borderRadius: '3px', overflow: 'hidden' }}>
+                  <div 
+                    style={{ 
+                      width: `${item.score}%`, 
+                      height: '100%', 
+                      background: item.score >= 85 ? '#10B981' : item.score >= 75 ? '#0F172A' : 'var(--primary-red)',
+                      borderRadius: '3px'
+                    }} 
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Error Types Donut Pie */}
+        <div className="edu-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ marginBottom: '16px' }}>
+            <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: '500' }}>Deduction Analysis</div>
+            <div style={{ fontSize: '16px', fontWeight: '800', color: 'var(--text-primary)' }}>Error Type Distribution</div>
+          </div>
+
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <DonutPieChart 
+              segments={[
+                { label: 'Distractor Traps', value: 5, color: '#C81E2E' },
+                { label: 'Time Management', value: 4, color: '#0F172A' },
+                { label: 'Spelling / Grammar', value: 2, color: '#10B981' },
+                { label: 'Vocabulary Gaps', value: 2, color: '#94A3B8' }
+              ]}
+              size={170}
+              strokeWidth={14}
+              centerTitle="13"
+              centerSubtitle="Total Errors"
+            />
+          </div>
+        </div>
+
       </div>
 
     </div>

@@ -68,27 +68,13 @@ export default function Navbar({
           <Menu size={18} />
         </button>
 
-        {/* Minimal Monochromatic Breadcrumbs */}
+        {/* Minimal Monochromatic Breadcrumbs - Modulix / SellPilot Style */}
         <div className="nav-breadcrumbs">
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            background: 'var(--bg-subtle)',
-            color: 'var(--brand-dark)',
-            border: '1px solid var(--border-color)',
-            padding: '3px 8px',
-            borderRadius: 'var(--radius-sm)',
-            fontSize: '11px',
-            fontWeight: '700',
-            letterSpacing: '0.4px',
-            flexShrink: 0
-          }}>
-            <RoleIcon size={12} color="var(--primary-red)" />
-            {currentMeta.portalTag}
-          </div>
+          <span style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text-muted)' }}>
+            {currentMeta.label.split(' ')[0]}
+          </span>
           <span style={{ color: 'var(--border-color)', fontSize: '13px' }}>/</span>
-          <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text-primary)' }}>
+          <span style={{ fontSize: '13.5px', fontWeight: '600', color: 'var(--text-primary)' }}>
             {activeScreen.replace(/([A-Z])/g, ' $1').replace(/-/g, ' ').trim()}
           </span>
         </div>
@@ -98,40 +84,15 @@ export default function Navbar({
           <Search size={15} color="var(--text-muted)" />
           <input 
             type="text" 
-            placeholder={`Search ${currentMeta.label.toLowerCase()}...`} 
+            placeholder="Search mock tests, modules, or candidates..." 
             readOnly 
           />
           <span className="search-shortcut-pill">⌘K</span>
         </div>
       </div>
 
-      {/* Right: Telemetry, Notifications, User Profile */}
+      {/* Right: Notifications & User Profile */}
       <div className="nav-right-section">
-
-        {/* Minimal Telemetry Status */}
-        <div 
-          className="desktop-only"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px',
-            background: 'var(--bg-subtle)',
-            border: '1px solid var(--border-color)',
-            padding: '3px 9px',
-            borderRadius: 'var(--radius-full)',
-            fontSize: '11px',
-            fontWeight: '600',
-            color: 'var(--text-secondary)'
-          }}
-        >
-          <span style={{
-            width: '6px',
-            height: '6px',
-            borderRadius: '50%',
-            background: 'var(--status-success-text)'
-          }} />
-          <span>SaaS Mutex Active</span>
-        </div>
 
         {/* Notifications Icon Button */}
         <div style={{ position: 'relative' }}>
