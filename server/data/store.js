@@ -1,0 +1,343 @@
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const DB_FILE = path.join(__dirname, 'db.json');
+
+// Initial State Template
+const initialData = {
+  users: {
+    student: {
+      id: 'std_01',
+      name: 'Nafis Ahmed',
+      email: 'nafis.ahmed@edumax.io',
+      avatar: 'NA',
+      role: 'Student',
+      targetBand: 8.0,
+      currentBand: 7.5,
+      batch: 'IELTS Masterclass B-12',
+      branch: 'Gulshan Branch',
+      examDate: '2026-11-20',
+      daysLeft: 46
+    },
+    teacher: {
+      id: 'tch_01',
+      name: 'Dr. Sarah Jenkins',
+      email: 's.jenkins@edumax.io',
+      avatar: 'SJ',
+      role: 'Senior IELTS Examiner',
+      branch: 'Gulshan HQ',
+      assignedBatches: 4,
+      pendingEvaluations: 8,
+      todayInterviews: 5
+    },
+    manager: {
+      id: 'mng_01',
+      name: 'Kazi Farhan',
+      email: 'kazi.farhan@edumax.io',
+      avatar: 'KF',
+      role: 'Institute Director / Owner',
+      branch: 'All Branches (5)',
+      totalStudents: 1420,
+      monthlyRevenue: '$64,500'
+    },
+    admin: {
+      id: 'adm_01',
+      name: 'Alex Rivera',
+      email: 'alex.rivera@platform.edumax.io',
+      avatar: 'AR',
+      role: 'Platform Super Admin',
+      tenantsCount: 34,
+      globalUsers: '48,200',
+      systemStatus: 'Optimal (99.98%)'
+    }
+  },
+
+  results: [
+    {
+      id: 'MOCK-109',
+      title: 'Edumax Official Mock Exam #09',
+      type: 'Academic',
+      date: '2026-09-28',
+      status: 'Evaluated',
+      overallBand: 7.5,
+      listening: 8.5,
+      reading: 8.0,
+      writing: 6.5,
+      speaking: 7.5,
+      examiner: 'Dr. Sarah Jenkins',
+      percentile: '92nd Percentile'
+    },
+    {
+      id: 'MOCK-108',
+      title: 'Edumax Cambridge Simulation #08',
+      type: 'Academic',
+      date: '2026-09-14',
+      status: 'Evaluated',
+      overallBand: 7.0,
+      listening: 7.5,
+      reading: 7.5,
+      writing: 6.5,
+      speaking: 7.0,
+      examiner: 'Michael Chang',
+      percentile: '84th Percentile'
+    },
+    {
+      id: 'MOCK-107',
+      title: 'Edumax Full Diagnostic Mock #07',
+      type: 'Academic',
+      date: '2026-08-30',
+      status: 'Evaluated',
+      overallBand: 7.0,
+      listening: 8.0,
+      reading: 7.0,
+      writing: 6.0,
+      speaking: 7.0,
+      examiner: 'Dr. Sarah Jenkins',
+      percentile: '81st Percentile'
+    },
+    {
+      id: 'MOCK-110',
+      title: 'Edumax British Council Replica #10',
+      type: 'Academic',
+      date: '2026-10-04',
+      status: 'Pending Evaluation',
+      overallBand: null,
+      listening: 8.5,
+      reading: 8.0,
+      writing: 'Grading...',
+      speaking: 'Slot: Tomorrow 2:30 PM',
+      examiner: 'Scheduled',
+      percentile: 'Calculating'
+    }
+  ],
+
+  tests: [
+    {
+      id: 'TEST-AC-01',
+      title: 'Cambridge IELTS 19 - Full Mock 1',
+      type: 'Academic',
+      category: 'Full Mock',
+      duration: '2h 45m',
+      questionsCount: 40,
+      difficulty: 'Hard',
+      attempts: 420,
+      tags: ['Official Format', 'Audio Included', 'AI Writing Evaluation'],
+      readingPassage: {
+        title: 'Passage 1: The Resurgence of Ancient Water Harvesting Systems',
+        text: `Paragraph A: In the arid and semi-arid terrain of northwestern Rajasthan, archaeological surveys have illuminated sophisticated vernacular engineering systems designed to collect and conserve seasonal monsoon precipitation. The traditional subterranean cistern, known colloquially as a tanka, functioned not merely as a domestic reservoir but as a pivotal community asset during protracted droughts.\n\nParagraph B: Constructed utilizing lime mortar, clay, and locally sourced sandstone tiles, these cylindrical chambers maintained ambient interior temperatures substantially lower than external atmospheric readings. Empirical water quality analyses reveal that natural sedimentation layers filtered microbial pathogens with surprising efficacy. Furthermore, sociological structures ensured collective stewardship over cleaning and desilting cycles.\n\nParagraph C: Modern piped infrastructure in the mid-twentieth century led to the widespread dereliction of these indigenous works. However, recurring municipal shortages and depleted groundwater tables have catalyzed civic restoration initiatives. Engineers are now amalgamating geopolymer sealants with vernacular hydraulic blueprints to fortify community resilience.`
+      },
+      questions: [
+        {
+          id: 1,
+          prompt: 'Tankas were utilized primarily in the humid coastal zones of eastern India.',
+          type: 'True/False/Not Given',
+          options: ['TRUE', 'FALSE', 'NOT GIVEN'],
+          correctKey: 'FALSE',
+          explanation: 'Paragraph A explicitly identifies Rajasthan as arid and semi-arid northwestern terrain, not humid coastal eastern India.'
+        },
+        {
+          id: 2,
+          prompt: 'Traditional tanka filtration relied on natural sedimentation.',
+          type: 'True/False/Not Given',
+          options: ['TRUE', 'FALSE', 'NOT GIVEN'],
+          correctKey: 'TRUE',
+          explanation: 'Paragraph B confirms natural sedimentation layers filtered pathogens with surprising efficacy.'
+        },
+        {
+          id: 3,
+          prompt: 'Modern municipal water grids successfully eliminated all drought vulnerability.',
+          type: 'True/False/Not Given',
+          options: ['TRUE', 'FALSE', 'NOT GIVEN'],
+          correctKey: 'FALSE',
+          explanation: 'Paragraph C states that recurring municipal shortages and depleted aquifers prompted restoration of indigenous systems.'
+        },
+        {
+          id: 4,
+          prompt: 'Primary mineral binder used in historic tanka masonry:',
+          type: 'Short Answer / Fill Blanks',
+          correctKey: 'lime mortar',
+          explanation: 'Paragraph B explicitly specifies "Constructed utilizing lime mortar, clay, and locally sourced sandstone tiles".'
+        }
+      ]
+    },
+    {
+      id: 'TEST-AC-02',
+      title: 'Edumax High-Band Booster - Academic Reading',
+      type: 'Academic',
+      category: 'Reading',
+      duration: '60 mins',
+      questionsCount: 40,
+      difficulty: 'Advanced',
+      attempts: 890,
+      tags: ['Passage 3 Heavy', 'True/False/Not Given Focus']
+    },
+    {
+      id: 'TEST-AC-04',
+      title: 'IELTS Task 2 Essay Masterclass Test',
+      type: 'Academic',
+      category: 'Writing',
+      duration: '60 mins',
+      questionsCount: 2,
+      difficulty: 'Hard',
+      attempts: 640,
+      tags: ['Instant AI Feedback', 'Model Band 9 Answers']
+    },
+    {
+      id: 'TEST-AC-05',
+      title: '1-on-1 Live Speaking Mock Session',
+      type: 'Academic / General',
+      category: 'Speaking',
+      duration: '15 mins',
+      questionsCount: 3,
+      difficulty: 'Medium',
+      attempts: 310,
+      tags: ['Live Examiner', 'Video/Audio Recording', 'Pronunciation Analysis']
+    }
+  ],
+
+  speakingSlots: [
+    { id: 'slot-1', date: '2026-10-08', time: '10:00 AM - 10:20 AM', examiner: 'Dr. Sarah Jenkins', branch: 'Gulshan HQ', status: 'Available' },
+    { id: 'slot-2', date: '2026-10-08', time: '11:30 AM - 11:50 AM', examiner: 'David Miller', branch: 'Online Zoom Room 2', status: 'Available' },
+    { id: 'slot-3', date: '2026-10-09', time: '02:15 PM - 02:35 PM', examiner: 'Dr. Sarah Jenkins', branch: 'Gulshan HQ', status: 'Available' },
+    { id: 'slot-4', date: '2026-10-10', time: '04:00 PM - 04:20 PM', examiner: 'Rachel Green', branch: 'Dhanmondi Center', status: 'Available' }
+  ],
+
+  batches: [
+    {
+      id: 'BATCH-A12',
+      name: 'IELTS Masterclass B-12 (Gulshan Evening)',
+      branch: 'Gulshan Main Campus (HQ)',
+      studentsCount: 28,
+      schedule: 'Mon, Wed, Fri (6:30 PM - 8:30 PM)',
+      avgBand: 7.2,
+      progress: 75,
+      nextSession: 'Tonight, 6:30 PM',
+      room: 'Lab 302',
+      teacher: 'Dr. Sarah Jenkins'
+    },
+    {
+      id: 'BATCH-W04',
+      name: 'Executive Weekend Intensive (Dhanmondi)',
+      branch: 'Dhanmondi Academic Center',
+      studentsCount: 22,
+      schedule: 'Fri & Sat (10:00 AM - 2:00 PM)',
+      avgBand: 6.8,
+      progress: 40,
+      nextSession: 'Friday, 10:00 AM',
+      room: 'Executive Suite B',
+      teacher: 'Michael Chang'
+    },
+    {
+      id: 'BATCH-ON09',
+      name: 'Online High-Band Accelerator 09',
+      branch: 'Global Online Hub',
+      studentsCount: 35,
+      schedule: 'Tue, Thu (8:00 PM - 10:00 PM)',
+      avgBand: 7.5,
+      progress: 90,
+      nextSession: 'Tomorrow, 8:00 PM',
+      room: 'Zoom Room 1',
+      teacher: 'Dr. Sarah Jenkins'
+    }
+  ],
+
+  branches: [
+    { id: 'br-1', name: 'Gulshan Main Campus (HQ)', code: 'GLS', students: 540, staff: 18, rooms: 12, revenue: '$28,400', manager: 'Tanvir Hossain' },
+    { id: 'br-2', name: 'Dhanmondi Academic Center', code: 'DHM', students: 380, staff: 12, rooms: 8, revenue: '$17,200', manager: 'Sabrina Rahman' },
+    { id: 'br-3', name: 'Uttara North Sector Hub', code: 'UTR', students: 260, staff: 9, rooms: 6, revenue: '$11,500', manager: 'Kamrul Hasan' },
+    { id: 'br-4', name: 'Chittagong Regional Campus', code: 'CTG', students: 160, staff: 6, rooms: 5, revenue: '$7,400', manager: 'Farhana Yasmin' },
+    { id: 'br-5', name: 'Sylhet Global Centre', code: 'SYL', students: 80, staff: 3, rooms: 3, revenue: '$3,800', manager: 'Anisul Huq' }
+  ],
+
+  staff: [
+    { id: 'stf-1', name: 'Dr. Sarah Jenkins', role: 'Senior IELTS Examiner', branch: 'Gulshan Main Campus', email: 's.jenkins@edumax.io', status: 'Active', activeBatches: 3, rating: 4.9, permissions: { conductSpeaking: true, gradeWriting: true, publishResults: true, authorQuestions: true, manageBatches: true, accessFinancials: false } },
+    { id: 'stf-2', name: 'Michael Chang', role: 'Speaking & Writing Specialist', branch: 'Dhanmondi Center', email: 'm.chang@edumax.io', status: 'Active', activeBatches: 2, rating: 4.8, permissions: { conductSpeaking: true, gradeWriting: true, publishResults: false, authorQuestions: true, manageBatches: true, accessFinancials: false } },
+    { id: 'stf-3', name: 'David Miller', role: 'Listening & Reading Coach', branch: 'Uttara Hub', email: 'd.miller@edumax.io', status: 'Active', activeBatches: 3, rating: 4.7, permissions: { conductSpeaking: false, gradeWriting: false, publishResults: false, authorQuestions: true, manageBatches: false, accessFinancials: false } }
+  ],
+
+  tenants: [
+    { id: 'ten-1', name: 'Edumax Consultancy (HQ)', domain: 'hq.edumax.io', students: 1420, tier: 'Enterprise Tier', status: 'Active', mrr: '$3,800', renewal: '2027-01-15' },
+    { id: 'ten-2', name: 'British Standard Academy Dhaka', domain: 'bsa.ieltscloud.app', students: 850, tier: 'Institute Pro', status: 'Active', mrr: '$1,950', renewal: '2026-12-01' },
+    { id: 'ten-3', name: 'FutureEdge International', domain: 'futureedge.edumax.io', students: 620, tier: 'Institute Pro', status: 'Active', mrr: '$1,400', renewal: '2027-03-20' },
+    { id: 'ten-4', name: 'Apex Pathway IELTS UK', domain: 'apexpathway.co.uk', students: 430, tier: 'Standard Team', status: 'Active', mrr: '$950', renewal: '2026-11-10' }
+  ],
+
+  coupons: [
+    { code: 'EDUMAX2026', discount: '20% OFF', type: 'Percentage', validTill: '2026-12-31', maxUses: 500, used: 248, status: 'Active' },
+    { code: 'IELTSVIP50', discount: '$50.00 OFF', type: 'Fixed', validTill: '2026-11-15', maxUses: 200, used: 182, status: 'Active' }
+  ],
+
+  featureFlags: {
+    'ten-1': {
+      aiWritingGrading: true,
+      liveSpeakingVideo: true,
+      whatsappAlerts: true,
+      antiCheatingProctoring: true,
+      customDomainSsl: true,
+      betaWhisperTranscriber: true
+    }
+  },
+
+  supportTickets: [
+    {
+      id: 'TICK-901',
+      tenant: 'Edumax Consultancy (HQ)',
+      sender: 'Nafis Ahmed (Student)',
+      subject: 'Speaking Examiner Slot Reschedule to Tomorrow Afternoon',
+      status: 'Open',
+      priority: 'High',
+      time: '18 mins ago',
+      message: 'Hello, due to a clash with my university exam tomorrow morning, I request to switch my 10:00 AM slot with Dr. Sarah to the 2:30 PM slot in Lab 302.'
+    }
+  ],
+
+  notifications: [
+    { id: 'notif-1', title: 'Writing Mock #109 Evaluated', body: 'Band 6.5 awarded with AI vocabulary suggestions.', time: '10 mins ago', read: false },
+    { id: 'notif-2', title: 'Speaking Slot Confirmed', body: 'Tomorrow at 2:30 PM with Dr. Sarah Jenkins.', time: '1 hour ago', read: false },
+    { id: 'notif-3', title: 'New Practice Test Available', body: 'Cambridge IELTS 19 Mock 1 has been assigned to your batch.', time: 'Yesterday', read: true }
+  ]
+};
+
+// Load or Initialize Store
+class Store {
+  constructor() {
+    this.data = initialData;
+    this.init();
+  }
+
+  init() {
+    try {
+      if (fs.existsSync(DB_FILE)) {
+        const fileContent = fs.readFileSync(DB_FILE, 'utf-8');
+        this.data = JSON.parse(fileContent);
+      } else {
+        this.save();
+      }
+    } catch (err) {
+      console.warn('Using in-memory store due to file access error:', err.message);
+    }
+  }
+
+  save() {
+    try {
+      fs.writeFileSync(DB_FILE, JSON.stringify(this.data, null, 2), 'utf-8');
+    } catch (err) {
+      console.warn('Could not persist to file:', err.message);
+    }
+  }
+
+  get(key) {
+    return this.data[key];
+  }
+
+  set(key, value) {
+    this.data[key] = value;
+    this.save();
+    return this.data[key];
+  }
+}
+
+export const db = new Store();
