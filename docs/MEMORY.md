@@ -36,9 +36,9 @@
 - **Gateway ID**: `cad6c072-f4a3-4d63-8a9e-3a211218d99e`
 - **Function Key**: `fn_edumax` (`8190758a-9565-45a1-ba86-602cb2ad91bf`)
 - **Runtime**: `STATIC`
-- **Active FunctionVersion**: `281d4d86-8ece-476e-877f-cf1f6e34248a` (READY)
+- **Active FunctionVersion**: `dcaf2cbe-253c-463b-aeee-497fd2f32bd3` (READY - 2026-10-06)
 - **Flow Key**: `flw_edumax` (`930b98a8-0b70-494e-8099-9899518c0d87`)
-- **Active FlowVersion**: `e3c0e160-38f6-4c46-8a69-8b9d80fffda6` (ADOPTED)
+- **Active FlowVersion**: `52b5f8cf-bcfc-4ecf-92cf-305e63a8c02b` (ADOPTED - 2026-10-06)
 - **Deployment Script**: `scripts/deploy-funchole.js` (`npm run deploy`)
 
 ## 5. Verification Suite
