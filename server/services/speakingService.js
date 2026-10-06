@@ -8,8 +8,8 @@ export class SpeakingService {
 
   static async bookSlot(candidateId, slotId, mode = 'Campus') {
     return await lockManager.runExclusive(slotId, async () => {
-      const slots = db.get('speakingSlots') || [];
-      const targetSlot = slots.find(s => s.id === slotId);
+      const targetSlot = db.indexes?.speakingSlotsById?.get(slotId) 
+        || (db.get('speakingSlots') || []).find(s => s.id === slotId);
       
       if (!targetSlot) {
         throw new Error('Interview slot not found.');

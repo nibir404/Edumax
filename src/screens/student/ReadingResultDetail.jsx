@@ -3,11 +3,7 @@ import {
   BookOpen, 
   CheckCircle2, 
   ArrowLeft, 
-  Clock, 
-  FileText, 
-  Sparkles,
-  ChevronRight,
-  Eye
+  Eye 
 } from 'lucide-react';
 import { DETAILED_RESULT } from '../../data/mockData';
 

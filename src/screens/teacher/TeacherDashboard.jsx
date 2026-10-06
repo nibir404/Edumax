@@ -1,15 +1,11 @@
 import React from 'react';
 import { 
   Users, 
-  Clock, 
   Award, 
   Mic, 
   PenTool, 
   Send, 
-  ChevronRight, 
-  CheckCircle2, 
-  Calendar,
-  ArrowUpRight
+  ArrowUpRight 
 } from 'lucide-react';
 import { CURRENT_USERS, TEACHER_BATCHES } from '../../data/mockData';
 import Sparkline from '../../components/charts/Sparkline';

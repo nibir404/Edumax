@@ -1,0 +1,162 @@
+# ==============================================================================
+# EDUMAX SAAS — KUBERNETES 1,000,000 CONCURRENT USERS PRODUCTION DEPLOYMENT
+# Features: Horizontal Pod Autoscaler (HPA), PDB, Probes, Resource Envelopes
+# ==============================================================================
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edumax-api
+  namespace: production
+  labels:
+    app.kubernetes.io/name: edumax-saas
+    app.kubernetes.io/tier: backend
+spec:
+  replicas: 6 # Baseline replicas for normal operating traffic
+  revisionHistoryLimit: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0 # Zero downtime rolling updates
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: edumax-saas
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: edumax-saas
+        app.kubernetes.io/tier: backend
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "5001"
+        prometheus.io/path: "/metrics"
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app.kubernetes.io/name
+                      operator: In
+                      values: ["edumax-saas"]
+                topologyKey: kubernetes.io/hostname
+      containers:
+        - name: edumax-saas-engine
+          image: edumax-registry.io/edumax-saas:4.5.0-production
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http-api
+              containerPort: 5001
+              protocol: TCP
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: PORT
+              value: "5001"
+            - name: CLUSTER_WORKERS
+              value: "auto"
+            - name: RATE_LIMIT_MAX
+              value: "5000"
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: edumax-secrets
+                  key: jwt-secret
+          resources:
+            requests:
+              cpu: "1000m"
+              memory: "1536Mi"
+            limits:
+              cpu: "3000m"
+              memory: "4096Mi"
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 5001
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 5001
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 2
+            successThreshold: 1
+            failureThreshold: 2
+---
+# High-Throughput ClusterIP Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: edumax-api-svc
+  namespace: production
+  labels:
+    app.kubernetes.io/name: edumax-saas
+spec:
+  type: ClusterIP
+  sessionAffinity: None
+  ports:
+    - name: http
+      port: 80
+      targetPort: 5001
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: edumax-saas
+---
+# Horizontal Pod Autoscaler (Autoscales from 4 to 32 pods during exam waves)
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: edumax-api-hpa
+  namespace: production
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: edumax-api
+  minReplicas: 4
+  maxReplicas: 32
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 15
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Percent
+          value: 20
+          periodSeconds: 60
+---
+# High Availability Pod Disruption Budget
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: edumax-pdb
+  namespace: production
+spec:
+  minAvailable: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: edumax-saas

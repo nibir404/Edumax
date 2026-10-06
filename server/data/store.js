@@ -1,10 +1,4 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const DB_FILE = path.join(__dirname, 'db.json');
+import { DatabaseEngine } from './dbEngine.js';
 
 // Initial State Template
 const initialData = {
@@ -301,43 +295,6 @@ const initialData = {
   ]
 };
 
-// Load or Initialize Store
-class Store {
-  constructor() {
-    this.data = initialData;
-    this.init();
-  }
+// High-throughput Asynchronous Database Engine instance
+export const db = new DatabaseEngine(initialData);
 
-  init() {
-    try {
-      if (fs.existsSync(DB_FILE)) {
-        const fileContent = fs.readFileSync(DB_FILE, 'utf-8');
-        this.data = JSON.parse(fileContent);
-      } else {
-        this.save();
-      }
-    } catch (err) {
-      console.warn('Using in-memory store due to file access error:', err.message);
-    }
-  }
-
-  save() {
-    try {
-      fs.writeFileSync(DB_FILE, JSON.stringify(this.data, null, 2), 'utf-8');
-    } catch (err) {
-      console.warn('Could not persist to file:', err.message);
-    }
-  }
-
-  get(key) {
-    return this.data[key];
-  }
-
-  set(key, value) {
-    this.data[key] = value;
-    this.save();
-    return this.data[key];
-  }
-}
-
-export const db = new Store();

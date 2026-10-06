@@ -43,15 +43,17 @@ export default function Logo({ size = 'medium', showSubtitle = true, inverted = 
           }}>
             EDUMAX
           </div>
-          <div style={{
-            fontSize: isSmall ? '10px' : '12px',
-            fontWeight: '700',
-            letterSpacing: '1px',
-            color: '#2D3136',
-            lineHeight: 1.2
-          }}>
-            CONSULTANCY
-          </div>
+          {showSubtitle && (
+            <div style={{
+              fontSize: isSmall ? '10px' : '12px',
+              fontWeight: '700',
+              letterSpacing: '1px',
+              color: '#2D3136',
+              lineHeight: 1.2
+            }}>
+              CONSULTANCY
+            </div>
+          )}
         </div>
       </div>
     </div>

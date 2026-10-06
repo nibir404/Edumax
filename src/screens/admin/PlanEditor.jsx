@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import { 
-  Layers, 
   Plus, 
   Check, 
   Edit3, 
-  Save, 
-  DollarSign,
-  Users,
-  X,
-  CheckCircle2
+  X, 
+  CheckCircle2 
 } from 'lucide-react';
 
 export default function PlanEditor() {

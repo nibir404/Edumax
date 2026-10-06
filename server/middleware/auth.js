@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import { db } from '../data/store.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'edumax_saas_production_secret_key_2026';
 
@@ -39,7 +38,7 @@ export function verifyToken(token) {
       return null; // Expired
     }
     return payload;
-  } catch (err) {
+  } catch {
     return null;
   }
 }

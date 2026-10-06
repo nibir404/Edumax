@@ -1,12 +1,6 @@
 import React from 'react';
 import { 
-  CreditCard, 
-  Check, 
-  Zap, 
-  ShieldCheck, 
-  ArrowUpRight, 
-  HelpCircle,
-  Clock
+  CreditCard 
 } from 'lucide-react';
 
 export default function SubscriptionBilling({ onNavigate }) {

@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import { 
-  Calendar as CalendarIcon, 
-  Clock, 
-  User, 
   MapPin, 
   Video, 
   CheckCircle2, 
   ChevronLeft, 
-  ChevronRight,
-  Sparkles
+  ChevronRight
 } from 'lucide-react';
 import { SPEAKING_SLOTS } from '../../data/mockData';
 import { api } from '../../services/api';
@@ -33,7 +29,7 @@ export default function SpeakingBooking() {
         // Fallback to client state
         setIsBooked(true);
       }
-    } catch (err) {
+    } catch {
       setIsBooked(true);
     } finally {
       setIsLoading(false);

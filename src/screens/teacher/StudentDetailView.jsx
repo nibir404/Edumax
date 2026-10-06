@@ -1,13 +1,10 @@
 import React from 'react';
 import { 
   ArrowLeft, 
-  Send,
-  CheckCircle2,
-  Award
+  Send 
 } from 'lucide-react';
 import { STUDENT_RESULTS } from '../../data/mockData';
 import SpiderChart from '../../components/charts/SpiderChart';
-import Sparkline from '../../components/charts/Sparkline';
 
 export default function StudentDetailView({ onBack, onAssignTest }) {
   const latest = STUDENT_RESULTS[0];

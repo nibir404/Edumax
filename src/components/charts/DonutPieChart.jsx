@@ -22,7 +22,16 @@ export default function DonutPieChart({
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
 
-  let cumulativePercent = 0;
+  const segmentsWithOffset = segments.map((seg, i) => {
+    const percent = seg.value / total;
+    const currentOffset = segments.slice(0, i).reduce((sum, s) => sum + (s.value / total), 0);
+    return {
+      ...seg,
+      percent,
+      strokeDasharray: `${circumference * percent} ${circumference * (1 - percent)}`,
+      strokeDashoffset: -circumference * currentOffset
+    };
+  });
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -30,12 +39,7 @@ export default function DonutPieChart({
       {/* Donut Graphic */}
       <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
         <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ transform: 'rotate(-90deg)' }}>
-          {segments.map((seg, idx) => {
-            const percent = seg.value / total;
-            const strokeDasharray = `${circumference * percent} ${circumference * (1 - percent)}`;
-            const strokeDashoffset = -circumference * cumulativePercent;
-            cumulativePercent += percent;
-
+          {segmentsWithOffset.map((seg, idx) => {
             const isHovered = hoveredIdx === idx;
 
             return (
@@ -47,8 +51,8 @@ export default function DonutPieChart({
                 fill="none"
                 stroke={seg.color}
                 strokeWidth={isHovered ? strokeWidth + 3 : strokeWidth}
-                strokeDasharray={strokeDasharray}
-                strokeDashoffset={strokeDashoffset}
+                strokeDasharray={seg.strokeDasharray}
+                strokeDashoffset={seg.strokeDashoffset}
                 style={{ 
                   transition: 'all 0.2s ease', 
                   cursor: 'pointer',

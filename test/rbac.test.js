@@ -22,8 +22,21 @@ async function getJSON(endpoint, headers = {}) {
   return { status: res.status, data: json };
 }
 
+async function ensureServerRunning() {
+  try {
+    const res = await fetch(`${BASE_URL.replace('/api', '')}/health`);
+    if (res.status === 200) return null;
+  } catch {}
+  const { startServer } = await import('../server/index.js');
+  const server = startServer(5001);
+  await new Promise(r => setTimeout(r, 600));
+  return server;
+}
+
 async function runRBACTests() {
   console.log('--- Starting Edumax SaaS RBAC Verification ---');
+  const serverInstance = await ensureServerRunning();
+  try {
 
   // Step 1: Login all 4 personas
   console.log('\n[1/4] Authenticating all 4 personas...');
@@ -84,6 +97,9 @@ async function runRBACTests() {
   console.log('\n=============================================');
   console.log('🎉 ALL RBAC ACCESS BOUNDARY TESTS PASSED (4/4)');
   console.log('=============================================\n');
+  } finally {
+    if (serverInstance) serverInstance.close();
+  }
 }
 
 runRBACTests().catch(err => {

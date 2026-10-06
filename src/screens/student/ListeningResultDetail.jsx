@@ -5,12 +5,8 @@ import {
   Pause, 
   Volume2, 
   CheckCircle2, 
-  XCircle, 
-  ArrowLeft,
-  Clock,
-  Sparkles,
-  BarChart3,
-  RotateCcw
+  ArrowLeft, 
+  Sparkles 
 } from 'lucide-react';
 import { DETAILED_RESULT } from '../../data/mockData';
 
@@ -97,7 +93,7 @@ export default function ListeningResultDetail({ onBack, onReviewAnswers }) {
             </div>
 
             {/* Simulated Animated Waveform */}
-            <div style={{ height: '40px', display: 'flex', alignItems: 'center', gap: '3px', cursor: 'pointer' }} onClick={(e) => setAudioProgress(50)}>
+            <div style={{ height: '40px', display: 'flex', alignItems: 'center', gap: '3px', cursor: 'pointer' }} onClick={() => setAudioProgress(50)}>
               {Array.from({ length: 48 }).map((_, idx) => {
                 const height = 10 + (Math.sin(idx * 0.4) * 16) + ((idx % 3) * 6);
                 const isPlayed = (idx / 48) * 100 <= audioProgress;

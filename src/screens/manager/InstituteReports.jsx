@@ -2,13 +2,9 @@ import React from 'react';
 import { 
   BarChart3, 
   Download, 
-  TrendingUp, 
   Award, 
-  Users, 
-  Calendar,
-  Building2
+  Users 
 } from 'lucide-react';
-import { INSTITUTE_BRANCHES } from '../../data/mockData';
 
 export default function InstituteReports() {
   const branchScores = [

@@ -1,19 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
-  Database, 
-  Search, 
-  Filter, 
   Globe, 
-  CheckCircle2, 
-  Plus, 
-  Clock, 
-  Sparkles,
-  BookOpen,
-  Headphones
+  Plus 
 } from 'lucide-react';
 
 export default function ContentLibrary() {
-  const [skill, setSkill] = useState('All');
 
   const sharedItems = [
     { id: 'GLB-01', title: 'Cambridge Academic Reading Battery 19', questions: 40, verifiedBy: 'Global Cambridge Review Board', status: 'Approved', downloads: 820 },

@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 import { 
   Send, 
-  BookOpen, 
-  Calendar, 
-  Clock, 
-  Users, 
   CheckCircle2, 
-  ArrowLeft,
-  Sparkles
+  ArrowLeft 
 } from 'lucide-react';
 import { TEST_LIBRARY, TEACHER_BATCHES } from '../../data/mockData';
 

@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
 import { 
   Search, 
-  Filter, 
   Clock, 
-  HelpCircle, 
   Play, 
   Headphones, 
   BookOpen, 
   PenTool, 
   Mic, 
-  Sparkles,
-  CheckCircle,
-  X
+  Sparkles, 
+  X 
 } from 'lucide-react';
 import { TEST_LIBRARY } from '../../data/mockData';
 
@@ -199,7 +196,11 @@ export default function TestLibrary({ onStartTest }) {
               <button 
                 className="btn btn-primary"
                 onClick={() => {
-                  alert(`Starting exam: ${selectedTestModal.title}. Best of luck!`);
+                  if (onStartTest) {
+                    onStartTest(selectedTestModal);
+                  } else {
+                    alert(`Starting exam: ${selectedTestModal.title}. Best of luck!`);
+                  }
                   setSelectedTestModal(null);
                 }}
               >

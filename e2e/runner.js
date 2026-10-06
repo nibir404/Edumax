@@ -1,4 +1,5 @@
 import { chromium } from '@playwright/test';
+import { spawn } from 'node:child_process';
 
 /**
  * Edumax SaaS Comprehensive E2E Test Suite
@@ -6,8 +7,42 @@ import { chromium } from '@playwright/test';
  * Validates Routing, All 4 User Persona Journeys, Social Login, and Visual Components.
  */
 
+import fs from 'node:fs';
+
 const BASE_URL = 'http://localhost:5173';
-const CHROME_PATH = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const MAC_CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const CHROME_PATH = process.env.CHROME_PATH || (fs.existsSync(MAC_CHROME) ? MAC_CHROME : undefined);
+
+async function ensureServerRunning() {
+  try {
+    const res = await fetch('http://localhost:5001/health');
+    if (res.status === 200) return null;
+  } catch {}
+  console.log('Spawning API server on http://localhost:5001 for E2E tests...');
+  const { startServer } = await import('../server/index.js');
+  const server = startServer(5001);
+  await new Promise(r => setTimeout(r, 600));
+  return server;
+}
+
+async function ensureViteRunning() {
+  try {
+    const res = await fetch(`${BASE_URL}/`);
+    if (res.status === 200) return null;
+  } catch {}
+  console.log('Spawning Vite dev server on http://localhost:5173 for E2E tests...');
+  const proc = spawn('npx', ['vite', '--port', '5173', '--strictPort'], {
+    stdio: 'ignore'
+  });
+  for (let i = 0; i < 40; i++) {
+    await new Promise(r => setTimeout(r, 250));
+    try {
+      const res = await fetch(`${BASE_URL}/`);
+      if (res.status === 200) break;
+    } catch {}
+  }
+  return proc;
+}
 
 async function runE2ETests() {
   console.log('\n======================================================');
@@ -16,6 +51,8 @@ async function runE2ETests() {
   console.log('======================================================\n');
 
   let browser;
+  let viteProc = null;
+  let apiServer = null;
   let passedCount = 0;
   let totalCount = 0;
 
@@ -31,10 +68,13 @@ async function runE2ETests() {
   }
 
   try {
-    browser = await chromium.launch({
-      executablePath: CHROME_PATH,
-      headless: true
-    });
+    apiServer = await ensureServerRunning();
+    viteProc = await ensureViteRunning();
+    const launchOptions = { headless: true };
+    if (CHROME_PATH) {
+      launchOptions.executablePath = CHROME_PATH;
+    }
+    browser = await chromium.launch(launchOptions);
 
     const context = await browser.newContext({
       viewport: { width: 1440, height: 900 }
@@ -250,6 +290,8 @@ async function runE2ETests() {
     process.exitCode = 1;
   } finally {
     if (browser) await browser.close();
+    if (viteProc) viteProc.kill();
+    if (apiServer) apiServer.close();
   }
 }
 

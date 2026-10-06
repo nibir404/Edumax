@@ -1,15 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { 
-  Building2, 
   Users, 
   Award, 
   DollarSign, 
-  TrendingUp, 
   GitBranch, 
   Plus, 
   ChevronRight,
-  ArrowUpRight,
-  Filter
+  ArrowUpRight
 } from 'lucide-react';
 import { INSTITUTE_BRANCHES, CURRENT_USERS } from '../../data/mockData';
 import Sparkline from '../../components/charts/Sparkline';

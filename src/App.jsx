@@ -114,11 +114,11 @@ export default function App() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [currentUser, setCurrentUser] = useState(() => {
+  const [_currentUser, setCurrentUser] = useState(() => {
     try {
       const saved = localStorage.getItem('edumax_user');
       if (saved) return JSON.parse(saved);
-    } catch (e) {}
+    } catch {}
     return CURRENT_USERS[ROLES.STUDENT];
   });
 
@@ -129,7 +129,7 @@ export default function App() {
         const u = JSON.parse(saved);
         if (u.role) return normalizeRole(u.role);
       }
-    } catch (e) {}
+    } catch {}
     return ROLES.STUDENT;
   });
 
@@ -185,7 +185,7 @@ export default function App() {
     if (location.pathname === '/login' || location.pathname === '/' || pathParts.length === 0) {
       navigate(`/${currentRole}/${DEFAULT_SCREENS[currentRole] || 'dashboard'}`, { replace: true });
     }
-  }, [isAuthenticated, location.pathname, currentRole]);
+  }, [isAuthenticated, location.pathname, currentRole, navigate, pathParts.length]);
 
   // Sync notifications from backend when logged in
   useEffect(() => {
@@ -232,7 +232,7 @@ export default function App() {
     setAuthToken(token);
     try {
       localStorage.setItem('edumax_user', JSON.stringify(normalizedUser));
-    } catch (e) {}
+    } catch {}
     setIsAuthenticated(true);
     setMobileMenuOpen(false);
     navigate(`/${roleKey}/${DEFAULT_SCREENS[roleKey] || 'dashboard'}`);
@@ -245,7 +245,7 @@ export default function App() {
     setAuthToken('');
     try {
       localStorage.removeItem('edumax_user');
-    } catch (e) {}
+    } catch {}
     setIsAuthenticated(false);
     navigate('/login');
     showToast('Signed out of Edumax Cloud successfully.', 'info');

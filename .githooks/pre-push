@@ -1,0 +1,32 @@
+#!/bin/sh
+# Edumax SaaS Git Pre-Push Hook
+echo ""
+echo "==============================================================="
+echo "🛡️ EDUMAX PRE-PUSH QUALITY GATE: VERIFYING INTEGRITY..."
+echo "==============================================================="
+
+# 1. Fast static analysis
+echo "⏳ Checking static analysis with oxlint..."
+npm run lint || { echo "❌ Linting errors detected. Push aborted."; exit 1; }
+
+# 2. RBAC Security perimeter
+echo "⏳ Verifying RBAC security perimeters..."
+npm run test:rbac || { echo "❌ RBAC boundary failure. Push aborted."; exit 1; }
+
+# 3. Concurrency Mutex
+echo "⏳ Verifying concurrency mutex locks..."
+npm run test:concurrency || { echo "❌ Concurrency lock failure. Push aborted."; exit 1; }
+
+# 4. 1M Scale Engine
+echo "⏳ Verifying 1M scale engine & throughput benchmarks..."
+npm run test:scale || { echo "❌ Scale test failure. Push aborted."; exit 1; }
+
+# 5. Production Build
+echo "⏳ Verifying Vite production bundle compilation..."
+npm run build || { echo "❌ Production build failure. Push aborted."; exit 1; }
+
+echo "==============================================================="
+echo "✅ ALL PRE-PUSH CHECKS PASSED. PROCEEDING WITH REMOTE PUSH."
+echo "==============================================================="
+echo ""
+exit 0

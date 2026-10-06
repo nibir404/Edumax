@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import { 
-  HelpCircle, 
-  MessageSquare, 
   Send, 
   ChevronDown, 
   ChevronUp, 
-  Phone, 
-  Mail, 
   CheckCircle2 
 } from 'lucide-react';
 

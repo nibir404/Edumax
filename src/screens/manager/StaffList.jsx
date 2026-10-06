@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
 import { 
-  Users, 
   Search, 
   Plus, 
-  ShieldCheck, 
   Star, 
-  ChevronRight, 
-  Mail,
-  Award
+  ChevronRight 
 } from 'lucide-react';
 import { STAFF_MEMBERS } from '../../data/mockData';
 

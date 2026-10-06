@@ -1,13 +1,10 @@
 import React from 'react';
 import { 
   Cpu, 
-  Server, 
   Activity, 
   CheckCircle2, 
-  AlertCircle, 
   DollarSign, 
-  Database,
-  Clock
+  Database 
 } from 'lucide-react';
 import { SYSTEM_HEALTH } from '../../data/mockData';
 

@@ -2,12 +2,8 @@ import React, { useState } from 'react';
 import { 
   ArrowLeft, 
   Building2, 
-  Globe, 
   Save, 
-  CheckCircle2, 
-  ShieldCheck, 
-  Sliders,
-  AlertTriangle
+  CheckCircle2 
 } from 'lucide-react';
 import { PLATFORM_TENANTS } from '../../data/mockData';
 

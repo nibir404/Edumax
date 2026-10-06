@@ -6,10 +6,7 @@ import {
   Mic, 
   Calendar, 
   ArrowUpRight, 
-  CheckCircle2, 
-  Clock, 
-  ChevronRight,
-  Filter
+  ChevronRight 
 } from 'lucide-react';
 import { CURRENT_USERS, STUDENT_RESULTS } from '../../data/mockData';
 import Sparkline from '../../components/charts/Sparkline';

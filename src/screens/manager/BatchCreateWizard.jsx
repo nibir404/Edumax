@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 import { 
-  Users, 
-  Calendar, 
   ArrowLeft, 
   CheckCircle2, 
-  Building2, 
-  Save, 
-  Sparkles,
-  ShieldCheck
+  Save 
 } from 'lucide-react';
 import { INSTITUTE_BRANCHES, STAFF_MEMBERS } from '../../data/mockData';
 import { api } from '../../services/api';
@@ -31,7 +26,7 @@ export default function BatchCreateWizard({ onBack, onComplete }) {
     setIsSubmitting(true);
     try {
       await api.createBatch(formData);
-    } catch (err) {}
+    } catch {}
     setIsSubmitting(false);
     setIsCreated(true);
     setTimeout(() => {
@@ -178,9 +173,9 @@ export default function BatchCreateWizard({ onBack, onComplete }) {
               <button type="button" className="btn btn-secondary" onClick={onBack}>
                 Cancel
               </button>
-              <button type="submit" className="btn btn-primary">
+              <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
                 <Save size={15} />
-                <span>Launch & Publish Cohort</span>
+                <span>{isSubmitting ? 'Launching...' : 'Launch & Publish Cohort'}</span>
               </button>
             </div>
 

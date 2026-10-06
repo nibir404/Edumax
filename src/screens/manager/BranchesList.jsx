@@ -1,17 +1,11 @@
 import React from 'react';
 import { 
-  GitBranch, 
-  MapPin, 
-  Users, 
-  DollarSign, 
   Plus, 
-  ArrowLeft,
-  ChevronRight,
-  ShieldCheck
+  ChevronRight 
 } from 'lucide-react';
 import { INSTITUTE_BRANCHES } from '../../data/mockData';
 
-export default function BranchesList({ onBack }) {
+export default function BranchesList() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       

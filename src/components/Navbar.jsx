@@ -5,7 +5,6 @@ import {
   ChevronDown, 
   Menu, 
   LogOut, 
-  User,
   GraduationCap,
   Award,
   Building,
@@ -54,7 +53,6 @@ export default function Navbar({
   };
 
   const currentMeta = roleMeta[currentRole] || roleMeta[ROLES.STUDENT];
-  const RoleIcon = currentMeta.icon;
 
   return (
     <header className="top-navbar">

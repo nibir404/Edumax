@@ -1,19 +1,9 @@
 import React, { useState } from 'react';
-import { 
-  TrendingUp, 
-  Target, 
-  Award, 
-  ArrowUpRight,
-  ChevronRight
-} from 'lucide-react';
-import { CURRENT_USERS } from '../../data/mockData';
 import SpiderChart from '../../components/charts/SpiderChart';
 import DotBarChart from '../../components/charts/DotBarChart';
 import DonutPieChart from '../../components/charts/DonutPieChart';
-import RoundCirclePie from '../../components/charts/RoundCirclePie';
 
 export default function ProgressAnalytics() {
-  const user = CURRENT_USERS.student;
   const [activeTab, setActiveTab] = useState('reading');
 
   const skillsData = [

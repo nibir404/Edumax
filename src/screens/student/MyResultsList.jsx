@@ -1,14 +1,9 @@
 import React, { useState } from 'react';
 import { 
-  Award, 
   Calendar, 
   Clock, 
   ChevronRight, 
-  Download, 
-  ExternalLink,
-  Filter,
-  CheckCircle2,
-  AlertCircle
+  CheckCircle2 
 } from 'lucide-react';
 import { STUDENT_RESULTS } from '../../data/mockData';
 

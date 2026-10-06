@@ -11,6 +11,7 @@ export default function Sparkline({
   height = 28,
   isPositive = true
 }) {
+  const rawId = React.useId();
   if (!data || data.length < 2) return null;
 
   const min = Math.min(...data);
@@ -45,7 +46,7 @@ export default function Sparkline({
 
   const fillD = `${pathD} L ${points[points.length - 1].x} ${height} L ${points[0].x} ${height} Z`;
   const strokeColor = color || (isPositive ? '#10B981' : '#EF4444');
-  const gradientId = `spark-grad-${Math.random().toString(36).substring(2, 9)}`;
+  const gradientId = `spark-grad-${rawId.replace(/:/g, '')}`;
 
   return (
     <svg 

@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 import { 
-  HelpCircle, 
-  Search, 
   MessageSquare, 
   CheckCircle2, 
-  Clock, 
-  AlertCircle, 
-  Send,
-  Building2
+  Send
 } from 'lucide-react';
 import { api } from '../../services/api';
 
@@ -153,7 +148,7 @@ export default function SupportInbox() {
                     setReplySuccess(true);
                     setReplyText('');
                     setTimeout(() => setReplySuccess(false), 4000);
-                  } catch (e) {
+                  } catch {
                     setReplySuccess(true);
                     setReplyText('');
                     setTimeout(() => setReplySuccess(false), 4000);

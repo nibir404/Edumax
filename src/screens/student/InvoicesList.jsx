@@ -1,8 +1,6 @@
 import React from 'react';
 import { 
-  Receipt, 
   Download, 
-  Calendar, 
   CheckCircle2, 
   ArrowLeft 
 } from 'lucide-react';

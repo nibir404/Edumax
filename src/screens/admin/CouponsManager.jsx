@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import { 
-  Ticket, 
   Plus, 
   Copy, 
   CheckCircle2, 
-  Calendar, 
-  Clock, 
-  Percent,
-  X,
-  Sparkles
+  X, 
+  Sparkles 
 } from 'lucide-react';
 import { api } from '../../services/api';
 
@@ -62,7 +58,7 @@ export default function CouponsManager() {
     try {
       const res = await api.validateCoupon(testCode, 200);
       setTestResult(res?.data || { valid: true, discountAmount: 40, finalAmount: 160 });
-    } catch (e) {
+    } catch {
       setTestResult({ valid: false, message: 'Invalid or expired code.' });
     } finally {
       setTesting(false);

@@ -2,14 +2,8 @@ import React, { useState } from 'react';
 import { 
   CheckCircle2, 
   Send, 
-  Clock, 
-  Calendar, 
-  Bell, 
-  ShieldCheck, 
-  Sparkles,
-  ArrowLeft
+  ArrowLeft 
 } from 'lucide-react';
-import { TEACHER_BATCHES } from '../../data/mockData';
 import { api } from '../../services/api';
 
 export default function PublishResultsModal({ onBack }) {
@@ -38,7 +32,7 @@ export default function PublishResultsModal({ onBack }) {
       await api.publishResults(session, { ...options, scheduleType, scheduledDateTime });
       setPublished(true);
       setTimeout(() => setPublished(false), 4000);
-    } catch (err) {
+    } catch {
       setPublished(true);
       setTimeout(() => setPublished(false), 4000);
     } finally {
@@ -191,9 +185,9 @@ export default function PublishResultsModal({ onBack }) {
             <button type="button" className="btn btn-secondary" onClick={onBack}>
               Cancel
             </button>
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-primary" disabled={loading}>
               <Send size={15} />
-              <span>Confirm & Release Results</span>
+              <span>{loading ? 'Releasing...' : 'Confirm & Release Results'}</span>
             </button>
           </div>
 

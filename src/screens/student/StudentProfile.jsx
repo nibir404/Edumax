@@ -1,14 +1,7 @@
 import React, { useState } from 'react';
 import { 
-  User, 
-  Mail, 
-  Phone, 
-  Target, 
-  Calendar, 
-  Lock, 
-  ShieldCheck, 
-  Save,
-  CheckCircle2
+  Save, 
+  CheckCircle2 
 } from 'lucide-react';
 import { CURRENT_USERS } from '../../data/mockData';
 

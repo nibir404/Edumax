@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { 
-  Layers, 
   ArrowLeft, 
-  Plus, 
   CheckCircle2, 
-  Clock, 
   Save, 
   FileText, 
   Headphones, 
@@ -17,7 +14,7 @@ export default function TestBuilder({ onBack, onComplete }) {
   const [testFormat, setTestFormat] = useState('Academic');
   const [duration, setDuration] = useState('2h 45m');
 
-  const [sections, setSections] = useState([
+  const [sections] = useState([
     { skill: 'Listening', name: 'Official 4-Section Audio Battery (40 Qs)', status: 'Configured' },
     { skill: 'Reading', name: 'Academic 3-Passage Battery (40 Qs)', status: 'Configured' },
     { skill: 'Writing', name: 'Task 1 (Bar Chart) & Task 2 (Discussion)', status: 'Configured' },

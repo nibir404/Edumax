@@ -4,9 +4,7 @@ import {
   Mail, 
   MessageSquare, 
   Smartphone, 
-  Check, 
-  AlertCircle,
-  Save
+  Save 
 } from 'lucide-react';
 
 export default function NotificationSettings() {

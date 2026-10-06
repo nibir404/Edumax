@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import { 
   ArrowLeft, 
-  ShieldCheck, 
-  User, 
-  Mail, 
   Save, 
-  CheckCircle2,
-  Lock
+  CheckCircle2 
 } from 'lucide-react';
 import { STAFF_MEMBERS } from '../../data/mockData';
 

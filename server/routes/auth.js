@@ -1,6 +1,5 @@
 import { Router } from 'express';
-import { db } from '../data/store.js';
-import { signToken, verifyToken, authenticate } from '../middleware/auth.js';
+import { signToken, authenticate } from '../middleware/auth.js';
 
 const router = Router();
 

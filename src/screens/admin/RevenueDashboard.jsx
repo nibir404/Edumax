@@ -2,13 +2,11 @@ import React from 'react';
 import { 
   DollarSign, 
   TrendingUp, 
-  Globe, 
   Building2, 
   Award, 
   ArrowUpRight,
   Download
 } from 'lucide-react';
-import { PLATFORM_TENANTS } from '../../data/mockData';
 import Sparkline from '../../components/charts/Sparkline';
 import TrackBarChart from '../../components/charts/TrackBarChart';
 import DonutPieChart from '../../components/charts/DonutPieChart';

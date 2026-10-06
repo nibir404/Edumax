@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
 import { 
-  Users, 
   ArrowLeft, 
   Search, 
-  CheckCircle2, 
-  Clock, 
-  Award, 
-  Send,
-  UserCheck,
+  Send, 
+  UserCheck, 
   ChevronRight
 } from 'lucide-react';
 import { TEACHER_BATCHES } from '../../data/mockData';

@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { 
-  Code, 
   ArrowLeft, 
   Save, 
   Plus, 
   Trash2, 
   CheckCircle2, 
-  UploadCloud,
-  FileText
+  UploadCloud 
 } from 'lucide-react';
 
 export default function QuestionEditor({ onBack, onComplete }) {

@@ -3,12 +3,8 @@ import {
   CheckCircle2, 
   XCircle, 
   Search, 
-  Filter, 
   ArrowLeft, 
-  HelpCircle, 
-  BookOpen, 
-  Headphones,
-  Sparkles
+  Sparkles 
 } from 'lucide-react';
 import { ANSWER_REVIEW_ITEMS } from '../../data/mockData';
 
@@ -45,7 +41,24 @@ export default function AnswerReview({ onBack }) {
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            <Search size={14} color="var(--text-muted)" style={{ position: 'absolute', left: '10px' }} />
+            <input 
+              type="text" 
+              placeholder="Search questions..." 
+              value={search} 
+              onChange={(e) => setSearch(e.target.value)}
+              style={{ 
+                padding: '6px 12px 6px 30px', 
+                fontSize: '12px', 
+                borderRadius: '6px', 
+                border: '1px solid var(--border-color)',
+                background: 'var(--bg-card)',
+                color: 'var(--text-primary)'
+              }}
+            />
+          </div>
           {['All', 'Correct', 'Incorrect'].map((mode) => (
             <button
               key={mode}

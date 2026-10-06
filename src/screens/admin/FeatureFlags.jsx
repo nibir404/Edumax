@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { 
-  Sparkles, 
   Save, 
   CheckCircle2, 
-  Building2, 
   Cpu, 
-  ShieldCheck, 
   Mic, 
   PenTool, 
   MessageSquare 
@@ -34,7 +31,7 @@ export default function FeatureFlags() {
       await Promise.all(
         Object.entries(flags).map(([k, v]) => api.toggleFeatureFlag(selectedTenant, k, v))
       );
-    } catch (e) {}
+    } catch {}
     setSaving(false);
     setSaved(true);
     setTimeout(() => setSaved(false), 2500);
@@ -148,9 +145,9 @@ export default function FeatureFlags() {
         </div>
 
         <div style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end' }}>
-          <button className="btn btn-primary" onClick={handleSave}>
+          <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
             <Save size={15} />
-            <span>Save Feature Toggles</span>
+            <span>{saving ? 'Saving...' : 'Save Feature Toggles'}</span>
           </button>
         </div>
       </div>

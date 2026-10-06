@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
 import { 
-  FolderKanban, 
   Plus, 
   Search, 
-  Filter, 
-  ChevronRight, 
-  Calendar, 
-  Users, 
-  Award,
-  GitBranch
+  ChevronRight 
 } from 'lucide-react';
 import { TEACHER_BATCHES } from '../../data/mockData';
 

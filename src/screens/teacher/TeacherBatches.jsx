@@ -1,12 +1,7 @@
 import React from 'react';
 import { 
-  Users, 
-  Clock, 
-  Calendar, 
-  Award, 
   ArrowRight, 
-  Send,
-  Plus
+  Send 
 } from 'lucide-react';
 import { TEACHER_BATCHES } from '../../data/mockData';
 

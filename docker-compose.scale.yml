@@ -1,0 +1,115 @@
+version: '3.8'
+
+# ==============================================================================
+# EDUMAX SAAS — 1,000,000 USER SCALE ORCHESTRATION TOPOLOGY
+# Composes Nginx L7 Load Balancer, 3x Node.js Multi-Core Workers, and Redis Cache
+# ==============================================================================
+
+services:
+  # Edge Reverse Proxy & Load Balancer
+  nginx:
+    image: nginx:alpine
+    container_name: edumax_nginx_edge
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./dist:/usr/share/nginx/html:ro
+    depends_on:
+      - app_1
+      - app_2
+      - app_3
+    networks:
+      - edumax_scale_net
+
+  # API Worker Node 1
+  app_1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: edumax_worker_lon1_01
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=5001
+      - CLUSTER_WORKERS=auto
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=edumax_production_secret_key_hs256_enterprise
+      - RATE_LIMIT_MAX=5000
+    depends_on:
+      - redis
+    networks:
+      - edumax_scale_net
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2048M
+
+  # API Worker Node 2
+  app_2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: edumax_worker_lon1_02
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=5001
+      - CLUSTER_WORKERS=auto
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=edumax_production_secret_key_hs256_enterprise
+      - RATE_LIMIT_MAX=5000
+    depends_on:
+      - redis
+    networks:
+      - edumax_scale_net
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2048M
+
+  # API Worker Node 3
+  app_3:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: edumax_worker_lon1_03
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=5001
+      - CLUSTER_WORKERS=auto
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET=edumax_production_secret_key_hs256_enterprise
+      - RATE_LIMIT_MAX=5000
+    depends_on:
+      - redis
+    networks:
+      - edumax_scale_net
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2048M
+
+  # High-Speed Distributed Cache & Lock Coordinator
+  redis:
+    image: redis:7-alpine
+    container_name: edumax_redis_cache
+    restart: always
+    command: redis-server --appendonly yes --maxmemory 1gb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    networks:
+      - edumax_scale_net
+
+volumes:
+  redis_data:
+
+networks:
+  edumax_scale_net:
+    driver: bridge

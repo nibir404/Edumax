@@ -3,13 +3,7 @@ import {
   Mic, 
   Play, 
   Pause, 
-  Volume2, 
-  ArrowLeft, 
-  Clock, 
-  Sparkles, 
-  MessageSquare,
-  Award,
-  CheckCircle2
+  ArrowLeft 
 } from 'lucide-react';
 import { DETAILED_RESULT } from '../../data/mockData';
 

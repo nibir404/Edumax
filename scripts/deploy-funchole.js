@@ -92,7 +92,7 @@ class McpClient {
 
   async init() {
     console.log('📡 [MCP] Initializing session with FuncHole...');
-    const initRes = await this.post({
+    await this.post({
       jsonrpc: '2.0',
       id: this.reqId++,
       method: 'initialize',

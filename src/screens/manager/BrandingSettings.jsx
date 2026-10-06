@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import { 
-  Palette, 
   Upload, 
   Globe, 
   Save, 
-  CheckCircle2, 
-  Sparkles,
-  ShieldCheck
+  CheckCircle2 
 } from 'lucide-react';
 import Logo from '../../components/Logo';
 

@@ -83,7 +83,7 @@ export default function TrackBarChart({
                   style={{
                     position: 'absolute',
                     bottom: `calc(${heightPercent}% + 14px)`,
-                    background: '#0F172A',
+                    background: accentColor,
                     color: '#FFFFFF',
                     padding: '6px 10px',
                     borderRadius: '8px',
@@ -107,7 +107,7 @@ export default function TrackBarChart({
                     height: 0,
                     borderLeft: '4px solid transparent',
                     borderRight: '4px solid transparent',
-                    borderTop: '4px solid #0F172A'
+                    borderTop: `4px solid ${accentColor}`
                   }} />
                 </div>
               )}

@@ -1,13 +1,7 @@
 import React from 'react';
 import { 
-  CreditCard, 
   Download, 
-  Users, 
-  Calendar, 
-  CheckCircle2, 
-  ShieldCheck, 
-  Zap,
-  DollarSign
+  CheckCircle2 
 } from 'lucide-react';
 
 export default function InstituteBilling() {

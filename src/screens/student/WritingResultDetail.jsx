@@ -2,14 +2,7 @@ import React, { useState } from 'react';
 import { 
   PenTool, 
   Sparkles, 
-  ArrowLeft, 
-  CheckCircle, 
-  AlertTriangle, 
-  FileText, 
-  Copy, 
-  Award,
-  Layers,
-  HelpCircle
+  ArrowLeft 
 } from 'lucide-react';
 import { DETAILED_RESULT } from '../../data/mockData';
 

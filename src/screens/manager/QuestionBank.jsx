@@ -1,16 +1,10 @@
 import React, { useState } from 'react';
 import { 
-  Database, 
   Plus, 
   Search, 
-  Filter, 
-  Headphones, 
-  BookOpen, 
-  PenTool, 
-  Mic, 
   Lock, 
-  Globe,
-  Edit3
+  Globe, 
+  Edit3 
 } from 'lucide-react';
 
 export default function QuestionBank({ onOpenEditor, onCreateTest }) {

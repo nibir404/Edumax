@@ -4,13 +4,7 @@ import {
   Play, 
   Pause, 
   RotateCcw, 
-  Save, 
-  Sparkles, 
-  Clock, 
-  CheckCircle2, 
-  AlertCircle,
-  Volume2,
-  FileText
+  Save 
 } from 'lucide-react';
 import { api } from '../../services/api';
 
@@ -39,14 +33,18 @@ export default function SpeakingInterviewConsole({ onFinish }) {
   };
 
   useEffect(() => {
-    let interval = null;
-    if (isTimerRunning && seconds > 0) {
-      interval = setInterval(() => setSeconds(s => s - 1), 1000);
-    } else if (seconds === 0) {
-      setIsTimerRunning(false);
-    }
+    if (!isTimerRunning) return;
+    const interval = setInterval(() => {
+      setSeconds(s => {
+        if (s <= 1) {
+          setIsTimerRunning(false);
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
     return () => clearInterval(interval);
-  }, [isTimerRunning, seconds]);
+  }, [isTimerRunning]);
 
   const formatTime = (secs) => {
     const m = Math.floor(secs / 60);
@@ -316,7 +314,7 @@ export default function SpeakingInterviewConsole({ onFinish }) {
                   overallBand: calculateOverall(),
                   examinerNotes
                 });
-              } catch (e) {}
+              } catch {}
               setIsSubmitting(false);
               if (onFinish) onFinish();
             }}

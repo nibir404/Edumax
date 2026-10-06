@@ -2,13 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Clock, 
   ArrowLeft, 
-  Send, 
-  CheckCircle2, 
-  PenTool, 
-  BookOpen, 
-  Headphones, 
-  Sparkles,
-  AlertCircle
+  Send 
 } from 'lucide-react';
 import { api } from '../../services/api';
 
@@ -54,7 +48,7 @@ export default function ExamTakingSession({ testId = 'TEST-AC-01', onCancel, onE
         alert("Exam evaluated and saved to your results ledger!");
         if (onCancel) onCancel();
       }
-    } catch (err) {
+    } catch {
       alert("Submission recorded.");
       if (onCancel) onCancel();
     } finally {

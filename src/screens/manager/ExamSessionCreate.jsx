@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
 import { 
-  ClipboardCheck, 
   ArrowLeft, 
-  Calendar, 
-  Clock, 
-  Key, 
   CheckCircle2, 
-  Save,
-  Layers,
-  Send
+  Save 
 } from 'lucide-react';
 import { TEST_LIBRARY, TEACHER_BATCHES } from '../../data/mockData';
 import { api } from '../../services/api';
@@ -36,7 +30,7 @@ export default function ExamSessionCreate({ onBack, onComplete }) {
       setTimeout(() => {
         if (onComplete) onComplete();
       }, 1500);
-    } catch (err) {
+    } catch {
       setCreated(true);
       setTimeout(() => {
         if (onComplete) onComplete();
@@ -185,9 +179,9 @@ export default function ExamSessionCreate({ onBack, onComplete }) {
               <button type="button" className="btn btn-secondary" onClick={onBack}>
                 Cancel
               </button>
-              <button type="submit" className="btn btn-primary">
+              <button type="submit" className="btn btn-primary" disabled={loading}>
                 <Save size={15} />
-                <span>Lock & Schedule Session</span>
+                <span>{loading ? 'Scheduling...' : 'Lock & Schedule Session'}</span>
               </button>
             </div>
 

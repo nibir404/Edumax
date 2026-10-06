@@ -2,11 +2,8 @@ import React, { useState } from 'react';
 import { 
   BarChart3, 
   Download, 
-  Filter, 
-  TrendingUp, 
   Users, 
-  Award,
-  ChevronDown
+  Award
 } from 'lucide-react';
 import { TEACHER_BATCHES } from '../../data/mockData';
 

@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
 import { 
-  Users, 
   Search, 
-  Filter, 
-  ShieldCheck, 
-  UserCheck, 
-  Lock, 
-  ExternalLink,
-  ChevronRight
+  ExternalLink 
 } from 'lucide-react';
 
 export default function GlobalUsers() {

@@ -25,29 +25,91 @@ export function getAuthToken() {
   return authToken || localStorage.getItem('edumax_auth_token') || '';
 }
 
-async function request(endpoint, options = {}) {
-  try {
-    const headers = {
-      'Content-Type': 'application/json',
-      ...options.headers
-    };
+// Client-Side In-Flight Request Deduplication & High-Scale Micro-Cache
+const inFlightRequests = new Map();
+const clientCache = new Map(); // key -> { data, expiresAt }
 
-    const token = getAuthToken();
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
-
-    const res = await fetch(`${API_BASE}${endpoint}`, {
-      ...options,
-      headers
-    });
-    
-    const data = await res.json();
-    return data;
-  } catch (err) {
-    // Graceful fallback for cloud/static deployment
-    return { success: false, error: err.message, networkError: true };
+function getClientCached(key) {
+  const entry = clientCache.get(key);
+  if (entry && entry.expiresAt > Date.now()) {
+    return entry.data;
   }
+  return null;
+}
+
+function setClientCached(key, data, ttlMs = 10000) {
+  clientCache.set(key, { data, expiresAt: Date.now() + ttlMs });
+}
+
+export function invalidateClientCache(pattern) {
+  if (!pattern) {
+    clientCache.clear();
+    return;
+  }
+  const regex = new RegExp(pattern);
+  for (const key of clientCache.keys()) {
+    if (regex.test(key)) clientCache.delete(key);
+  }
+}
+
+async function request(endpoint, options = {}) {
+  const method = (options.method || 'GET').toUpperCase();
+  const isGet = method === 'GET';
+  const cacheKey = `${method}:${endpoint}`;
+
+  // Check client microcache for GET
+  if (isGet) {
+    const cached = getClientCached(cacheKey);
+    if (cached) return cached;
+
+    // Deduplicate simultaneous in-flight GET requests
+    if (inFlightRequests.has(cacheKey)) {
+      return inFlightRequests.get(cacheKey);
+    }
+  }
+
+  const fetchPromise = (async () => {
+    try {
+      const headers = {
+        'Content-Type': 'application/json',
+        ...options.headers
+      };
+
+      const token = getAuthToken();
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      // Add automatic idempotency key for mutations if not specified
+      if (!isGet && !headers['Idempotency-Key']) {
+        headers['Idempotency-Key'] = `idem_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+      }
+
+      const res = await fetch(`${API_BASE}${endpoint}`, {
+        ...options,
+        headers
+      });
+      
+      const data = await res.json();
+      if (isGet && data && data.success) {
+        setClientCached(cacheKey, data, 10000); // 10s micro-cache
+      }
+      return data;
+    } catch (err) {
+      // Graceful fallback for cloud/static deployment
+      return { success: false, error: err.message, networkError: true };
+    } finally {
+      if (isGet) {
+        inFlightRequests.delete(cacheKey);
+      }
+    }
+  })();
+
+  if (isGet) {
+    inFlightRequests.set(cacheKey, fetchPromise);
+  }
+
+  return fetchPromise;
 }
 
 export const api = {
@@ -59,6 +121,7 @@ export const api = {
     });
     if (res && res.success && res.data?.token) {
       setAuthToken(res.data.token);
+      invalidateClientCache();
       return res;
     }
     // Fallback for cloud static deployment
@@ -75,6 +138,7 @@ export const api = {
     });
     if (res && res.success && res.data?.token) {
       setAuthToken(res.data.token);
+      invalidateClientCache();
       return res;
     }
     // Fallback for cloud static deployment
@@ -91,14 +155,15 @@ export const api = {
       try {
         const saved = localStorage.getItem('edumax_user');
         if (saved) return { success: true, data: JSON.parse(saved) };
-      } catch (e) {}
+      } catch {}
     }
     return res;
   },
 
   logout: () => {
     setAuthToken('');
-    try { localStorage.removeItem('edumax_user'); } catch (e) {}
+    invalidateClientCache();
+    try { localStorage.removeItem('edumax_user'); } catch {}
   },
 
   // User & Profile
@@ -107,6 +172,7 @@ export const api = {
     return (res && res.success) ? res : { success: true, data: CURRENT_USERS[role] || CURRENT_USERS.student };
   },
   updateProfile: async (profileData) => {
+    invalidateClientCache('/user');
     const res = await request('/user/profile', {
       method: 'PUT',
       body: JSON.stringify(profileData)
@@ -115,11 +181,13 @@ export const api = {
   },
 
   // Exams & Tests
-  getTests: async () => {
-    const res = await request('/tests');
+  getTests: async (page, limit) => {
+    const query = page ? `?page=${page}&limit=${limit || 20}` : '';
+    const res = await request(`/tests${query}`);
     return (res && res.success) ? res : { success: true, data: TEST_LIBRARY };
   },
   submitExam: async (payload) => {
+    invalidateClientCache('/results');
     const res = await request('/exams/submit', {
       method: 'POST',
       body: JSON.stringify(payload)
@@ -138,8 +206,9 @@ export const api = {
       }
     };
   },
-  getResults: async () => {
-    const res = await request('/results');
+  getResults: async (page, limit) => {
+    const query = page ? `?page=${page}&limit=${limit || 20}` : '';
+    const res = await request(`/results${query}`);
     return (res && res.success) ? res : { success: true, data: STUDENT_RESULTS };
   },
 
@@ -149,6 +218,7 @@ export const api = {
     return (res && res.success) ? res : { success: true, data: SPEAKING_SLOTS };
   },
   bookSpeakingSlot: async (slotId, mode) => {
+    invalidateClientCache('/speaking');
     const res = await request('/speaking/book', {
       method: 'POST',
       body: JSON.stringify({ slotId, mode })
@@ -159,6 +229,8 @@ export const api = {
     };
   },
   submitSpeakingEvaluation: async (payload) => {
+    invalidateClientCache('/speaking');
+    invalidateClientCache('/results');
     const res = await request('/speaking/evaluate', {
       method: 'POST',
       body: JSON.stringify(payload)
@@ -167,11 +239,13 @@ export const api = {
   },
 
   // Batches & Sessions (Manager)
-  getBatches: async () => {
-    const res = await request('/batches');
+  getBatches: async (page, limit) => {
+    const query = page ? `?page=${page}&limit=${limit || 20}` : '';
+    const res = await request(`/batches${query}`);
     return (res && res.success) ? res : { success: true, data: TEACHER_BATCHES };
   },
   createBatch: async (batchData) => {
+    invalidateClientCache('/batches');
     const res = await request('/batches/create', {
       method: 'POST',
       body: JSON.stringify(batchData)
@@ -179,6 +253,7 @@ export const api = {
     return (res && res.success) ? res : { success: true, data: { ...batchData, id: `batch_${Date.now()}` } };
   },
   scheduleExamSession: async (sessionData) => {
+    invalidateClientCache('/batches');
     const res = await request('/exams/schedule', {
       method: 'POST',
       body: JSON.stringify(sessionData)
@@ -186,6 +261,7 @@ export const api = {
     return (res && res.success) ? res : { success: true, data: { ...sessionData, id: `sess_${Date.now()}` } };
   },
   publishResults: async (sessionId, options) => {
+    invalidateClientCache('/results');
     const res = await request('/results/publish', {
       method: 'POST',
       body: JSON.stringify({ sessionId, options })
@@ -194,11 +270,13 @@ export const api = {
   },
 
   // Platform Admin
-  getTenants: async () => {
-    const res = await request('/tenants');
+  getTenants: async (page, limit) => {
+    const query = page ? `?page=${page}&limit=${limit || 20}` : '';
+    const res = await request(`/tenants${query}`);
     return (res && res.success) ? res : { success: true, data: PLATFORM_TENANTS };
   },
   updateTenant: async (id, data) => {
+    invalidateClientCache('/tenants');
     const res = await request(`/tenants/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data)
@@ -216,6 +294,7 @@ export const api = {
     };
   },
   toggleFeatureFlag: async (tenantId, flagKey, enabled) => {
+    invalidateClientCache('/features');
     const res = await request('/features/toggle', {
       method: 'POST',
       body: JSON.stringify({ tenantId, flagKey, enabled })
@@ -271,6 +350,7 @@ export const api = {
     };
   },
   markNotificationsRead: async () => {
+    invalidateClientCache('/notifications');
     const res = await request('/notifications/read', {
       method: 'POST'
     });
